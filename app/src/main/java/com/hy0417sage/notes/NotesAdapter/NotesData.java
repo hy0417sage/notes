@@ -4,7 +4,7 @@ import android.net.Uri;
 
 public class NotesData {
 
-    public Long tempIndex;
+    public long tempIndex;
     public String title;
     public String content;
     public String string_url_list;

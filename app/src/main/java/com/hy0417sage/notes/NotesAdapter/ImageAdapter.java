@@ -17,7 +17,7 @@ import java.util.List;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
     private Context context;
-    private final List<NotesData> list_data;
+    private final List<NotesData> listData;
     private OnItemClickListener mListener = null;
 
     public interface OnItemClickListener {
@@ -28,13 +28,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         this.mListener = listener;
     }
 
-    public ImageAdapter(Context context, List<NotesData> list_data) {
-        this.list_data = list_data;
+    public ImageAdapter(Context context, List<NotesData> listData) {
+        this.listData = listData;
         this.context = context;
     }
 
-    public ImageAdapter(List<NotesData> list_data) {
-        this.list_data = list_data;
+    public ImageAdapter(List<NotesData> listData) {
+        this.listData = listData;
     }
 
     @NonNull
@@ -47,7 +47,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        NotesData notesData = list_data.get(position);
+        NotesData notesData = listData.get(position);
         Glide.with(context).load(notesData.getUrl()).override(300, 300).into(holder.imageView);
 
         //메모 편집 및 작성 화면인 경우 cancel 아이콘은 표시해줍니다.
@@ -58,7 +58,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return list_data.size();
+        return listData.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

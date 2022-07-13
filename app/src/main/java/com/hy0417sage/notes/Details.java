@@ -32,54 +32,54 @@ import java.util.Objects;
 
 public class Details extends Fragment {
 
-    Interface activity;
+    public Interface activity;
 
-    TextView text_title;
-    TextView text_content;
-    TextView img_count;
+    public TextView textTitle;
+    public TextView textContent;
+    public TextView imgCount;
 
-    List<NotesData> memo_list = new ArrayList<>();
-    LinearLayoutManager horizonalLayoutManager;
-    RecyclerView recyclerView;
-    RecyclerView.Adapter adapter;
+    public List<NotesData> memoList = new ArrayList<>();
+    public LinearLayoutManager horizontalLayoutManager;
+    public RecyclerView recyclerView;
+    public RecyclerView.Adapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        LinearLayout fragment_Details = (LinearLayout) inflater.inflate(R.layout.details, container, false);
+        LinearLayout fragmentDetails = (LinearLayout) inflater.inflate(R.layout.details, container, false);
         setHasOptionsMenu(true);
-        Toolbar toolbar = fragment_Details.findViewById(R.id.toolbar);
+        Toolbar toolbar = fragmentDetails.findViewById(R.id.toolbar);
         ((AppCompatActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(toolbar);
 
         activity = (Interface) getActivity();
 
-        text_title = (TextView) fragment_Details.findViewById(R.id.text_title);
-        text_content = (TextView) fragment_Details.findViewById(R.id.text_content);
-        img_count = (TextView) fragment_Details.findViewById(R.id.img_count);
+        textTitle = (TextView) fragmentDetails.findViewById(R.id.text_title);
+        textContent = (TextView) fragmentDetails.findViewById(R.id.text_content);
+        imgCount = (TextView) fragmentDetails.findViewById(R.id.img_count);
 
-        horizonalLayoutManager
+        horizontalLayoutManager
                 = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
-        recyclerView = (RecyclerView) fragment_Details.findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) fragmentDetails.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setLayoutManager(horizonalLayoutManager);
+        recyclerView.setLayoutManager(horizontalLayoutManager);
 
         //1. 작성된 메모의 제목과 본문을 볼수 있습니다.
-        text_title.setText(activity.title);
-        text_content.setText(activity.content);
-        text_content.setMovementMethod(new ScrollingMovementMethod());
+        textTitle.setText(activity.title);
+        textContent.setText(activity.content);
+        textContent.setMovementMethod(new ScrollingMovementMethod());
 
         /* 2. 메모에 첨부되어있는 이미지를 볼 수 있습니다.
          * CreateAndEdit을 통해 메모에 첨부되어있는 이미지를 ImageAdapter로 볼 수 있습니다. */
-        memo_list.clear();
+        memoList.clear();
         for (int i = 0; i < activity.url.size(); i++) {
             NotesData memo_data = new NotesData(activity.url.get(i), "Details");
-            memo_list.add(memo_data);
+            memoList.add(memo_data);
         }
 
-        adapter = new ImageAdapter(getActivity().getApplicationContext(), memo_list);
+        adapter = new ImageAdapter(getActivity().getApplicationContext(), memoList);
         recyclerView.setAdapter(adapter);
 
-        return fragment_Details;
+        return fragmentDetails;
     }
 
     @SuppressLint("SetTextI18n")
@@ -87,7 +87,7 @@ public class Details extends Fragment {
     public void onResume() {
         super.onResume();
         Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
-        img_count.setText("사진 개수 : " + activity.url.size() + "개");
+        imgCount.setText("사진 개수 : " + activity.url.size() + "개");
     }
 
     @Override
@@ -106,7 +106,7 @@ public class Details extends Fragment {
             //3. 상단 메뉴를 통해 메모 내용을 편집할 수 있습니다.
             case R.id.edit_button:
                 if (activity.nowIndex == 0) {
-                    activity.first_data_edit_delete();
+                    activity.firstDataEditDelete();
                 }
                 activity.onFragmentChange("CreateAndEdit");
                 break;
@@ -114,10 +114,10 @@ public class Details extends Fragment {
             //3. 상단 메뉴를 통해 메모 내용을 삭제할 수 있습니다.
             case R.id.delete_button:
                 if (activity.nowIndex == 0) {
-                    activity.first_data_edit_delete();
-                    activity.mDBHelper.deleteColumn(activity.nowIndex);
+                    activity.firstDataEditDelete();
+                    activity.dbHelper.deleteColumn(activity.nowIndex);
                 } else {
-                    activity.data_delete();
+                    activity.dataDelete();
                 }
                 break;
         }

@@ -23,15 +23,15 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     private Context context;
-    private final List<NotesData> list_data;
+    private final List<NotesData> listData;
 
-    public MainAdapter(Context context, List<NotesData> list_data) {
-        this.list_data = list_data;
+    public MainAdapter(Context context, List<NotesData> listData) {
+        this.listData = listData;
         this.context = context;
     }
 
-    public MainAdapter(List<NotesData> list_data) {
-        this.list_data = list_data;
+    public MainAdapter(List<NotesData> listData) {
+        this.listData = listData;
     }
 
     @NonNull
@@ -44,19 +44,19 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        NotesData notesData = list_data.get(position);
+        NotesData notesData = listData.get(position);
 
         holder.tempIndex = notesData.getTempIndex();
         holder.title.setText(notesData.getTitle()); //메모 제목
         holder.content.setText(notesData.getContent()); //메모 글
-        holder.string_url = notesData.getStringUrlList().replace("[", "").replace("]", "");
-        List<String> list = Arrays.asList(holder.string_url.split(","));
+        holder.stringUrl = notesData.getStringUrlList().replace("[", "").replace("]", "");
+        List<String> list = Arrays.asList(holder.stringUrl.split(","));
         Glide.with(context).load(list.get(0)).override(300, 300).into(holder.imageView); //첫번째 이미지를 썸네일로 보여줍니다.
     }
 
     @Override
     public int getItemCount() {
-        return list_data.size();
+        return listData.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -64,7 +64,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         public Long tempIndex;
         public TextView title;
         public TextView content;
-        public String string_url;
+        public String stringUrl;
         public ImageView imageView;
 
         public ViewHolder(View itemView) {
@@ -83,7 +83,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                     intent.putExtra("nowIndex", tempIndex);
                     intent.putExtra("title", title.getText());
                     intent.putExtra("content", content.getText());
-                    intent.putExtra("string_url", string_url);
+                    intent.putExtra("string_url", stringUrl);
                     context.startActivity(intent.addFlags(FLAG_ACTIVITY_NEW_TASK));
                 }
             });

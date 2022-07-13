@@ -12,9 +12,9 @@ public class DBHelper {
 
     private static final String DATABASE_NAME = "Notes.db";
     private static final int DATABASE_VERSION = 1;
-    public static SQLiteDatabase mDB;
-    private DatabaseHelper mDBHelper;
-    private final Context mCtx;
+    public static SQLiteDatabase db;
+    private DatabaseHelper dbHelper;
+    private final Context ctx;
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -29,26 +29,26 @@ public class DBHelper {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS " + DataBases.CreateDB.TABLENAME);
+            db.execSQL("DROP TABLE IF EXISTS " + DataBases.CreateDB.TABLE_NAME);
             onCreate(db);
         }
     }
 
     public DBHelper(Context context) {
-        this.mCtx = context;
+        this.ctx = context;
     }
 
     public void open() throws SQLException {
-        mDBHelper = new DatabaseHelper(mCtx, DATABASE_NAME, null, DATABASE_VERSION);
-        mDB = mDBHelper.getWritableDatabase();
+        dbHelper = new DatabaseHelper(ctx, DATABASE_NAME, null, DATABASE_VERSION);
+        db = dbHelper.getWritableDatabase();
     }
 
     public void create() {
-        mDBHelper.onCreate(mDB);
+        dbHelper.onCreate(db);
     }
 
     public void close() {
-        mDB.close();
+        db.close();
     }
 
     public void insertColumn(String title, String content, String url) {
@@ -56,7 +56,7 @@ public class DBHelper {
         values.put(DataBases.CreateDB.Title, title);
         values.put(DataBases.CreateDB.Content, content);
         values.put(DataBases.CreateDB.Url, url);
-        mDB.insert(DataBases.CreateDB.TABLENAME, null, values);
+        db.insert(DataBases.CreateDB.TABLE_NAME, null, values);
     }
 
     public void updateColumn(long id, String title, String content, String url) {
@@ -64,19 +64,19 @@ public class DBHelper {
         values.put(DataBases.CreateDB.Title, title);
         values.put(DataBases.CreateDB.Content, content);
         values.put(DataBases.CreateDB.Url, url);
-        mDB.update(DataBases.CreateDB.TABLENAME, values, "_id=" + id, null);
+        db.update(DataBases.CreateDB.TABLE_NAME, values, "_id=" + id, null);
     }
 
     public void deleteColumn(long id) {
-        mDB.delete(DataBases.CreateDB.TABLENAME, "_id=" + id, null);
+        db.delete(DataBases.CreateDB.TABLE_NAME, "_id=" + id, null);
     }
 
     public Cursor selectColumns() {
-        return mDB.query(DataBases.CreateDB.TABLENAME, null, null, null, null, null, null);
+        return db.query(DataBases.CreateDB.TABLE_NAME, null, null, null, null, null, null);
     }
 
     public Cursor sortColumn(){
-        return mDB.rawQuery( "SELECT * FROM NotesTable ORDER BY " + "_id" + " DESC;", null);
+        return db.rawQuery( "SELECT * FROM NotesTable ORDER BY " + "_id" + " DESC;", null);
     }
 
 }

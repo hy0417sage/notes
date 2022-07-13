@@ -36,15 +36,15 @@ import java.util.Objects;
 
 public class CreateAndEdit extends Fragment implements View.OnClickListener {
 
-    Interface activity;
-    private LinearLayout Fragment_CreateAndEdit;
-    EditText edit_title, edit_content;
+    public Interface activity;
+    private LinearLayout fragmentCreateAndEdit;
+    public EditText editTitle, editContent;
 
-    LinearLayoutManager horizonalLayoutManager;
-    private final List<NotesData> memo_list = new ArrayList<>();
-    RecyclerView recyclerView;
-    RecyclerView.Adapter adapter;
-    Button add_img_button;
+    public LinearLayoutManager horizontalLayoutManager;
+    private final List<NotesData> memoList = new ArrayList<>();
+    public RecyclerView recyclerView;
+    public RecyclerView.Adapter adapter;
+    public Button addImgButton;
 
     @Override
     public void onDetach() {
@@ -54,30 +54,30 @@ public class CreateAndEdit extends Fragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Fragment_CreateAndEdit = (LinearLayout) inflater.inflate(R.layout.create_and_edit, container, false);
+        fragmentCreateAndEdit = (LinearLayout) inflater.inflate(R.layout.create_and_edit, container, false);
         setHasOptionsMenu(true);
-        Toolbar toolbar = Fragment_CreateAndEdit.findViewById(R.id.toolbar);
+        Toolbar toolbar = fragmentCreateAndEdit.findViewById(R.id.toolbar);
         ((AppCompatActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(toolbar);
 
         activity = (Interface) getActivity();
 
         //1. 제목 입력란과 본문 입력란, 이미지 첨부란이 구분되어 있습니다.
-        edit_title = (EditText) Fragment_CreateAndEdit.findViewById(R.id.edit_title);
-        edit_content = (EditText) Fragment_CreateAndEdit.findViewById(R.id.edit_content);
-        edit_title.setText(activity.title);
-        edit_content.setText(activity.content);
+        editTitle = (EditText) fragmentCreateAndEdit.findViewById(R.id.edit_title);
+        editContent = (EditText) fragmentCreateAndEdit.findViewById(R.id.edit_content);
+        editTitle.setText(activity.title);
+        editContent.setText(activity.content);
 
-        horizonalLayoutManager
+        horizontalLayoutManager
                 = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
-        recyclerView = (RecyclerView) Fragment_CreateAndEdit.findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) fragmentCreateAndEdit.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setLayoutManager(horizonalLayoutManager);
+        recyclerView.setLayoutManager(horizontalLayoutManager);
 
-        add_img_button = (Button) Fragment_CreateAndEdit.findViewById(R.id.add_img_button);
-        add_img_button.setOnClickListener(this);
+        addImgButton = (Button) fragmentCreateAndEdit.findViewById(R.id.add_img_button);
+        addImgButton.setOnClickListener(this);
 
-        return Fragment_CreateAndEdit;
+        return fragmentCreateAndEdit;
     }
 
     @Override
@@ -86,22 +86,22 @@ public class CreateAndEdit extends Fragment implements View.OnClickListener {
         Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
         /* 2. 메모에 이미지를 실시간으로 첨부합니다. (생명주기 onResume 사용)
          * 실시간으로 첨부되고 있는 이미지를 ImageAdapter로 볼 수 있습니다. */
-        memo_list.clear();
+        memoList.clear();
         for (int i = 0; i < activity.url.size(); i++) {
-            NotesData memo_data = new NotesData(activity.url.get(i), "CreateAndEdit");
-            memo_list.add(memo_data);
+            NotesData memoData = new NotesData(activity.url.get(i), "CreateAndEdit");
+            memoList.add(memoData);
         }
-        adapter = new ImageAdapter(getActivity().getApplicationContext(), memo_list);
+        adapter = new ImageAdapter(getActivity().getApplicationContext(), memoList);
 
         // 3. 이미지를 삭제할 수 있습니다.
         ((ImageAdapter) adapter).setOnItemClickListener(new ImageAdapter.OnItemClickListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onItemClick(View v, int position) {
-                activity.url.remove(memo_list.get(position).getUrl());
-                memo_list.remove(memo_list.get(position));
+                activity.url.remove(memoList.get(position).getUrl());
+                memoList.remove(memoList.get(position));
                 adapter.notifyDataSetChanged(); //이미지가 삭제되는것을 실시간으로 보여줍니다.
-                Toast.makeText(Fragment_CreateAndEdit.getContext(), "이미지가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(fragmentCreateAndEdit.getContext(), "이미지가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
             }
         });
         recyclerView.setAdapter(adapter);
@@ -118,9 +118,9 @@ public class CreateAndEdit extends Fragment implements View.OnClickListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save_button) {
             if (activity.nowIndex == 0) {
-                activity.data_insert();
+                activity.dataInsert();
             } else {
-                activity.data_edit();
+                activity.dataEdit();
             }
         }
         return super.onOptionsItemSelected(item);
@@ -132,7 +132,7 @@ public class CreateAndEdit extends Fragment implements View.OnClickListener {
          * 총 방법은 3 가지이며 선택 다이얼로그를 사용하여 첨부 방법을 선택할 수 있도록 하였습니다. */
         if (v.getId() == R.id.add_img_button) {
             final CharSequence[] items = {"@string/camera", "@sting/gallery", "@sting/link"};
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Fragment_CreateAndEdit.getContext());
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(fragmentCreateAndEdit.getContext());
             alertDialogBuilder.setTitle("@string/add_pic");
             alertDialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
@@ -144,7 +144,7 @@ public class CreateAndEdit extends Fragment implements View.OnClickListener {
                         activity.gallery();
 
                     } else if (items[id].equals("@sting/link")) {
-                        activity.link_dialog();
+                        activity.linkDialog();
                     }
                     dialog.dismiss();
                 }

@@ -28,12 +28,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private final List<NotesData> memo_list = new ArrayList<>();
+    private final List<NotesData> memoList = new ArrayList<>();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    StaggeredGridLayoutManager staggeredGridLayoutManager;
+    public StaggeredGridLayoutManager staggeredGridLayoutManager;
 
-    private DBHelper mDBHelper;
+    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +52,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
 
-        mDBHelper = new DBHelper(this);
-        mDBHelper.open();
-        mDBHelper.create();
+        dbHelper = new DBHelper(this);
+        dbHelper.open();
+        dbHelper.create();
 
     }
 
@@ -66,8 +66,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //1. 로컬 영역에서 저장된 메모를 읽어 리스트 형태로 회면에 표시합니다.
     public void showDatabase() {
-        Cursor iCursor = mDBHelper.sortColumn();
-        memo_list.clear();
+        Cursor iCursor = dbHelper.sortColumn();
+        memoList.clear();
 
         while (iCursor.moveToNext()) {
             Long tempIndex = iCursor.getLong(iCursor.getColumnIndex("_id"));
@@ -75,12 +75,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String temp_content = iCursor.getString(iCursor.getColumnIndex("content"));
             String temp_url = iCursor.getString(iCursor.getColumnIndex("url"));
             NotesData memo_data = new NotesData(tempIndex, temp_title, temp_content, temp_url);
-            memo_list.add(memo_data);
+            memoList.add(memo_data);
         }
 
         //2. MainAdapter로 메모 데이터를 넘겨 이미지의 썸네일 제목 글의 일부를 보여줍니다.
         //리스트 메모 클릭시 상세화면 이동은 MainAdapter의 itemView.setOnClickListener로 데이터를 넘겨 구현하였습니다.
-        adapter = new MainAdapter(getApplicationContext(), memo_list);
+        adapter = new MainAdapter(getApplicationContext(), memoList);
         recyclerView.setAdapter(adapter);
     }
 
