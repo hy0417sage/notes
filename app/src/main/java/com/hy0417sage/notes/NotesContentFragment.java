@@ -30,9 +30,9 @@ import java.util.Objects;
  * 기능2. 메모 상세보기
  * **/
 
-public class Details extends Fragment {
+public class NotesContentFragment extends Fragment {
 
-    public Interface activity;
+    public FunctionStorageActivity functionStorageActivity;
 
     public TextView textTitle;
     public TextView textContent;
@@ -50,7 +50,7 @@ public class Details extends Fragment {
         Toolbar toolbar = fragmentDetails.findViewById(R.id.toolbar);
         ((AppCompatActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(toolbar);
 
-        activity = (Interface) getActivity();
+        functionStorageActivity = (FunctionStorageActivity) getActivity();
 
         textTitle = (TextView) fragmentDetails.findViewById(R.id.text_title);
         textContent = (TextView) fragmentDetails.findViewById(R.id.text_content);
@@ -64,15 +64,15 @@ public class Details extends Fragment {
         recyclerView.setLayoutManager(horizontalLayoutManager);
 
         //1. 작성된 메모의 제목과 본문을 볼수 있습니다.
-        textTitle.setText(activity.title);
-        textContent.setText(activity.content);
+        textTitle.setText(functionStorageActivity.title);
+        textContent.setText(functionStorageActivity.content);
         textContent.setMovementMethod(new ScrollingMovementMethod());
 
         /* 2. 메모에 첨부되어있는 이미지를 볼 수 있습니다.
          * CreateAndEdit을 통해 메모에 첨부되어있는 이미지를 ImageAdapter로 볼 수 있습니다. */
         memoList.clear();
-        for (int i = 0; i < activity.url.size(); i++) {
-            NotesData memo_data = new NotesData(activity.url.get(i), "Details");
+        for (int i = 0; i < functionStorageActivity.url.size(); i++) {
+            NotesData memo_data = new NotesData(functionStorageActivity.url.get(i), "Details");
             memoList.add(memo_data);
         }
 
@@ -87,7 +87,7 @@ public class Details extends Fragment {
     public void onResume() {
         super.onResume();
         Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
-        imgCount.setText("사진 개수 : " + activity.url.size() + "개");
+        imgCount.setText("사진 개수 : " + functionStorageActivity.url.size() + "개");
     }
 
     @Override
@@ -105,19 +105,19 @@ public class Details extends Fragment {
 
             //3. 상단 메뉴를 통해 메모 내용을 편집할 수 있습니다.
             case R.id.edit_button:
-                if (activity.nowIndex == 0) {
-                    activity.firstDataEditDelete();
+                if (functionStorageActivity.nowIndex == 0) {
+                    functionStorageActivity.firstDataEditDelete();
                 }
-                activity.onFragmentChange("CreateAndEdit");
+                functionStorageActivity.onFragmentChange("CreateAndEdit");
                 break;
 
             //3. 상단 메뉴를 통해 메모 내용을 삭제할 수 있습니다.
             case R.id.delete_button:
-                if (activity.nowIndex == 0) {
-                    activity.firstDataEditDelete();
-                    activity.dbHelper.deleteColumn(activity.nowIndex);
+                if (functionStorageActivity.nowIndex == 0) {
+                    functionStorageActivity.firstDataEditDelete();
+                    functionStorageActivity.dbHelper.deleteColumn(functionStorageActivity.nowIndex);
                 } else {
-                    activity.dataDelete();
+                    functionStorageActivity.dataDelete();
                 }
                 break;
         }

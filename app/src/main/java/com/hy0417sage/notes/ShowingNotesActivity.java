@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hy0417sage.notes.DataBase.DBHelper;
-import com.hy0417sage.notes.NotesAdapter.MainAdapter;
+import com.hy0417sage.notes.NotesAdapter.NotesAdapter;
 import com.hy0417sage.notes.NotesAdapter.NotesData;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +26,7 @@ import java.util.List;
  * 기능1. 메모리스트
  * **/
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class ShowingNotesActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final List<NotesData> memoList = new ArrayList<>();
     private RecyclerView recyclerView;
@@ -71,16 +71,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         while (iCursor.moveToNext()) {
             Long tempIndex = iCursor.getLong(iCursor.getColumnIndex("_id"));
-            String temp_title = iCursor.getString(iCursor.getColumnIndex("title"));
-            String temp_content = iCursor.getString(iCursor.getColumnIndex("content"));
-            String temp_url = iCursor.getString(iCursor.getColumnIndex("url"));
-            NotesData memo_data = new NotesData(tempIndex, temp_title, temp_content, temp_url);
-            memoList.add(memo_data);
+            String tempTitle = iCursor.getString(iCursor.getColumnIndex("title"));
+            String tempContent = iCursor.getString(iCursor.getColumnIndex("content"));
+            String tempUrl = iCursor.getString(iCursor.getColumnIndex("url"));
+            NotesData memoData = new NotesData(tempIndex, tempTitle, tempContent, tempUrl);
+            memoList.add(memoData);
         }
 
         //2. MainAdapter로 메모 데이터를 넘겨 이미지의 썸네일 제목 글의 일부를 보여줍니다.
         //리스트 메모 클릭시 상세화면 이동은 MainAdapter의 itemView.setOnClickListener로 데이터를 넘겨 구현하였습니다.
-        adapter = new MainAdapter(getApplicationContext(), memoList);
+        adapter = new NotesAdapter(getApplicationContext(), memoList);
         recyclerView.setAdapter(adapter);
     }
 
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         //4. 새 메모를 작성하기 위해 메모 작성 화면으로 이동합니다.
         if (v.getId() == R.id.go_to_create_and_edit_button) {
-            startActivity(new Intent(getApplicationContext(), Interface.class));
+            startActivity(new Intent(getApplicationContext(), FunctionStorageActivity.class));
         }
     }
 }

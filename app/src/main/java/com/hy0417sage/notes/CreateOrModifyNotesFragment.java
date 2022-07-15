@@ -34,9 +34,9 @@ import java.util.Objects;
  * 기능3. 메모 편집 및 작성
  * **/
 
-public class CreateAndEdit extends Fragment implements View.OnClickListener {
+public class CreateOrModifyNotesFragment extends Fragment implements View.OnClickListener {
 
-    public Interface activity;
+    public FunctionStorageActivity functionStorageActivity;
     private LinearLayout fragmentCreateAndEdit;
     public EditText editTitle, editContent;
 
@@ -49,7 +49,7 @@ public class CreateAndEdit extends Fragment implements View.OnClickListener {
     @Override
     public void onDetach() {
         super.onDetach();
-        activity = null;
+        functionStorageActivity = null;
     }
 
     @Override
@@ -59,13 +59,13 @@ public class CreateAndEdit extends Fragment implements View.OnClickListener {
         Toolbar toolbar = fragmentCreateAndEdit.findViewById(R.id.toolbar);
         ((AppCompatActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(toolbar);
 
-        activity = (Interface) getActivity();
+        functionStorageActivity = (FunctionStorageActivity) getActivity();
 
         //1. 제목 입력란과 본문 입력란, 이미지 첨부란이 구분되어 있습니다.
         editTitle = (EditText) fragmentCreateAndEdit.findViewById(R.id.edit_title);
         editContent = (EditText) fragmentCreateAndEdit.findViewById(R.id.edit_content);
-        editTitle.setText(activity.title);
-        editContent.setText(activity.content);
+        editTitle.setText(functionStorageActivity.title);
+        editContent.setText(functionStorageActivity.content);
 
         horizontalLayoutManager
                 = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
@@ -87,8 +87,8 @@ public class CreateAndEdit extends Fragment implements View.OnClickListener {
         /* 2. 메모에 이미지를 실시간으로 첨부합니다. (생명주기 onResume 사용)
          * 실시간으로 첨부되고 있는 이미지를 ImageAdapter로 볼 수 있습니다. */
         memoList.clear();
-        for (int i = 0; i < activity.url.size(); i++) {
-            NotesData memoData = new NotesData(activity.url.get(i), "CreateAndEdit");
+        for (int i = 0; i < functionStorageActivity.url.size(); i++) {
+            NotesData memoData = new NotesData(functionStorageActivity.url.get(i), "CreateAndEdit");
             memoList.add(memoData);
         }
         adapter = new ImageAdapter(getActivity().getApplicationContext(), memoList);
@@ -98,7 +98,7 @@ public class CreateAndEdit extends Fragment implements View.OnClickListener {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onItemClick(View v, int position) {
-                activity.url.remove(memoList.get(position).getUrl());
+                functionStorageActivity.url.remove(memoList.get(position).getUrl());
                 memoList.remove(memoList.get(position));
                 adapter.notifyDataSetChanged(); //이미지가 삭제되는것을 실시간으로 보여줍니다.
                 Toast.makeText(fragmentCreateAndEdit.getContext(), "이미지가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
@@ -117,10 +117,10 @@ public class CreateAndEdit extends Fragment implements View.OnClickListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save_button) {
-            if (activity.nowIndex == 0) {
-                activity.dataInsert();
+            if (functionStorageActivity.nowIndex == 0) {
+                functionStorageActivity.dataInsert();
             } else {
-                activity.dataEdit();
+                functionStorageActivity.dataEdit();
             }
         }
         return super.onOptionsItemSelected(item);
@@ -137,14 +137,14 @@ public class CreateAndEdit extends Fragment implements View.OnClickListener {
             alertDialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     if (items[id].equals("@string/camera")) {
-                        activity.requirePermission();
-                        activity.camera();
+                        functionStorageActivity.requirePermission();
+                        functionStorageActivity.camera();
 
                     } else if (items[id].equals("@sting/gallery")) {
-                        activity.gallery();
+                        functionStorageActivity.gallery();
 
                     } else if (items[id].equals("@sting/link")) {
-                        activity.linkDialog();
+                        functionStorageActivity.linkDialog();
                     }
                     dialog.dismiss();
                 }

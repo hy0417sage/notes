@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.hy0417sage.notes.Interface;
+import com.hy0417sage.notes.FunctionStorageActivity;
 import com.hy0417sage.notes.R;
 
 import java.util.Arrays;
@@ -20,17 +20,17 @@ import java.util.List;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
+public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
 
     private Context context;
     private final List<NotesData> listData;
 
-    public MainAdapter(Context context, List<NotesData> listData) {
+    public NotesAdapter(Context context, List<NotesData> listData) {
         this.listData = listData;
         this.context = context;
     }
 
-    public MainAdapter(List<NotesData> listData) {
+    public NotesAdapter(List<NotesData> listData) {
         this.listData = listData;
     }
 
@@ -79,11 +79,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context.getApplicationContext(), Interface.class);
+                    Intent intent = new Intent(context.getApplicationContext(), FunctionStorageActivity.class);
                     intent.putExtra("nowIndex", tempIndex);
                     intent.putExtra("title", title.getText());
                     intent.putExtra("content", content.getText());
-                    intent.putExtra("string_url", stringUrl);
+                    intent.putExtra("stringUrl", stringUrl);
                     context.startActivity(intent.addFlags(FLAG_ACTIVITY_NEW_TASK));
                 }
             });

@@ -18,14 +18,14 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     private Context context;
     private final List<NotesData> listData;
-    private OnItemClickListener mListener = null;
+    private OnItemClickListener onItemClickListener = null;
 
     public interface OnItemClickListener {
         void onItemClick(View v, int position);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.mListener = listener;
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     public ImageAdapter(Context context, List<NotesData> listData) {
@@ -77,8 +77,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION) {
-                        if (mListener != null) {
-                            mListener.onItemClick(v, pos);
+                        if (onItemClickListener != null) {
+                            onItemClickListener.onItemClick(v, pos);
                         }
                     }
                 }

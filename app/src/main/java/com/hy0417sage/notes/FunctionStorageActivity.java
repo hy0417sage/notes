@@ -38,10 +38,10 @@ import java.util.List;
  * 데이터와 기능이 있는 액티비티 *
  **/
 
-public class Interface extends AppCompatActivity {
+public class FunctionStorageActivity extends AppCompatActivity {
 
-    public CreateAndEdit createAndEdit = new CreateAndEdit();
-    public Details details = new Details();
+    public CreateOrModifyNotesFragment createAndEdit = new CreateOrModifyNotesFragment();
+    public NotesContentFragment details = new NotesContentFragment();
 
     public long nowIndex;
     public String title, content;
@@ -100,7 +100,7 @@ public class Interface extends AppCompatActivity {
              * 메모 리스트 화면에서 선택한 메모의 값을 불러와 메모 상세보기 화면에 보여줍니다. */
             title = intent.getExtras().getString("title");
             content = intent.getExtras().getString("content");
-            stringUrl = intent.getExtras().getString("string_url");
+            stringUrl = intent.getExtras().getString("stringUrl");
 
             String data = stringUrl.replace("[", "").replace("]", "").replaceAll(" ", "");
             List<String> url_data = Arrays.asList(data.split(","));
@@ -160,7 +160,7 @@ public class Interface extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dbHelper.deleteColumn(nowIndex);
-                        Toast.makeText(Interface.this, "메모를 삭제하였습니다.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FunctionStorageActivity.this, "메모를 삭제하였습니다.", Toast.LENGTH_SHORT).show();
                         onBackPressed();
                     }
                 })
@@ -208,7 +208,7 @@ public class Interface extends AppCompatActivity {
                     img = contentType.startsWith("image/");
                     if (img == true) {
                         url.add(Uri.parse(linkData));
-                        Intent intent = new Intent(Interface.this, Interface.class);
+                        Intent intent = new Intent(FunctionStorageActivity.this, FunctionStorageActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);
                     } else {
@@ -227,7 +227,7 @@ public class Interface extends AppCompatActivity {
 
     //기능3. 카메라 permission
     public void requirePermission() {
-        int permission = ContextCompat.checkSelfPermission(Interface.this, Manifest.permission.CAMERA);
+        int permission = ContextCompat.checkSelfPermission(FunctionStorageActivity.this, Manifest.permission.CAMERA);
         if (permission == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 0);
         }
@@ -235,7 +235,7 @@ public class Interface extends AppCompatActivity {
 
     //기능3. permission 허용시 카메라 intent
     public void camera() {
-        int permission = ContextCompat.checkSelfPermission(Interface.this, Manifest.permission.CAMERA);
+        int permission = ContextCompat.checkSelfPermission(FunctionStorageActivity.this, Manifest.permission.CAMERA);
         if (permission == PackageManager.PERMISSION_GRANTED)
             dispatchTakePictureIntent();
     }
