@@ -1,4 +1,4 @@
-package com.hy0417sage.notes;
+package com.hy0417sage.notes.Fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -19,8 +19,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hy0417sage.notes.NotesAdapter.ImageAdapter;
-import com.hy0417sage.notes.NotesAdapter.NotesData;
+import com.hy0417sage.notes.FunctionActivity;
+import com.hy0417sage.notes.Adapter.ImageAdapter;
+import com.hy0417sage.notes.DataClass.MemoData;
+import com.hy0417sage.notes.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,56 +32,56 @@ import java.util.Objects;
  * 기능2. 메모 상세보기
  * **/
 
-public class NotesContentFragment extends Fragment {
+public class MemoContentFragment extends Fragment {
 
-    public FunctionStorageActivity functionStorageActivity;
-
+    public FunctionActivity functionActivity;
     public TextView textTitle;
     public TextView textContent;
     public TextView imgCount;
-
-    public List<NotesData> memoList = new ArrayList<>();
+    public List<MemoData> memoList = new ArrayList<>();
     public LinearLayoutManager horizontalLayoutManager;
     public RecyclerView recyclerView;
     public RecyclerView.Adapter adapter;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        LinearLayout fragmentDetails = (LinearLayout) inflater.inflate(R.layout.details, container, false);
+        LinearLayout memoContent = (LinearLayout) inflater.inflate(R.layout.memo_content_view, container, false);
         setHasOptionsMenu(true);
-        Toolbar toolbar = fragmentDetails.findViewById(R.id.toolbar);
+
+        Toolbar toolbar = memoContent.findViewById(R.id.toolbar);
         ((AppCompatActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(toolbar);
 
-        functionStorageActivity = (FunctionStorageActivity) getActivity();
+        functionActivity = (FunctionActivity) getActivity();
 
-        textTitle = (TextView) fragmentDetails.findViewById(R.id.text_title);
-        textContent = (TextView) fragmentDetails.findViewById(R.id.text_content);
-        imgCount = (TextView) fragmentDetails.findViewById(R.id.img_count);
+        textTitle = (TextView) memoContent.findViewById(R.id.text_title);
+        textContent = (TextView) memoContent.findViewById(R.id.text_content);
+        imgCount = (TextView) memoContent.findViewById(R.id.img_count);
 
         horizontalLayoutManager
                 = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
-        recyclerView = (RecyclerView) fragmentDetails.findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) memoContent.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setLayoutManager(horizontalLayoutManager);
 
         //1. 작성된 메모의 제목과 본문을 볼수 있습니다.
-        textTitle.setText(functionStorageActivity.title);
-        textContent.setText(functionStorageActivity.content);
+        textTitle.setText(functionActivity.title);
+        textContent.setText(functionActivity.content);
         textContent.setMovementMethod(new ScrollingMovementMethod());
 
         /* 2. 메모에 첨부되어있는 이미지를 볼 수 있습니다.
          * CreateAndEdit을 통해 메모에 첨부되어있는 이미지를 ImageAdapter로 볼 수 있습니다. */
         memoList.clear();
-        for (int i = 0; i < functionStorageActivity.imgUrlList.size(); i++) {
-            NotesData memo_data = new NotesData(functionStorageActivity.imgUrlList.get(i), "Details");
+        for (int i = 0; i < functionActivity.imgUrlList.size(); i++) {
+            MemoData memo_data = new MemoData(functionActivity.imgUrlList.get(i), "Details");
             memoList.add(memo_data);
         }
 
         adapter = new ImageAdapter(getActivity().getApplicationContext(), memoList);
         recyclerView.setAdapter(adapter);
 
-        return fragmentDetails;
+        return memoContent;
     }
 
     public void init(){
@@ -91,7 +93,7 @@ public class NotesContentFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
-        imgCount.setText("사진 개수 : " + functionStorageActivity.imgUrlList.size() + "개");
+        imgCount.setText("사진 개수 : " + functionActivity.imgUrlList.size() + "개");
     }
 
     @Override
@@ -109,19 +111,19 @@ public class NotesContentFragment extends Fragment {
 
             //3. 상단 메뉴를 통해 메모 내용을 편집할 수 있습니다.
             case R.id.edit_button:
-                if (functionStorageActivity.nowIndex == 0) {
-                    functionStorageActivity.newMemoEdit();
+                if (functionActivity.nowIndex == 0) {
+                    functionActivity.newMemoEdit();
                 }
-                functionStorageActivity.onFragmentChange(functionStorageActivity.createOrModifyNotesFragment);
+                functionActivity.onFragmentChange(functionActivity.memoCreateOrModifyFragment);
                 break;
 
             //3. 상단 메뉴를 통해 메모 내용을 삭제할 수 있습니다.
             case R.id.delete_button:
-                if (functionStorageActivity.nowIndex == 0) {
-                    functionStorageActivity.newMemoEdit();
-                    functionStorageActivity.databaseHelper.deleteColumn(functionStorageActivity.nowIndex);
+                if (functionActivity.nowIndex == 0) {
+                    functionActivity.newMemoEdit();
+                    functionActivity.databaseHelper.deleteColumn(functionActivity.nowIndex);
                 } else {
-                    functionStorageActivity.deleteMemo();
+                    functionActivity.deleteMemo();
                 }
                 break;
         }

@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.hy0417sage.notes.ShowingNotesActivity"
+            android:name="com.hy0417sage.notes.ShowAllMemoActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="RedundantLabel"
@@ -26,10 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.hy0417sage.notes.FunctionStorageActivity" android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name="com.hy0417sage.notes.CreateOrModifyNotesFragment"
+        <activity android:name="com.hy0417sage.notes.FunctionActivity" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name="com.hy0417sage.notes.Fragment.MemoCreateOrModifyFragment"
             tools:ignore="Instantiatable" />
-        <activity android:name="com.hy0417sage.notes.NotesContentFragment"
+        <activity android:name="com.hy0417sage.notes.Fragment.MemoContentFragment"
             tools:ignore="Instantiatable" />
 
         <provider

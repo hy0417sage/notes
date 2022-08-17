@@ -1,4 +1,4 @@
-package com.hy0417sage.notes;
+package com.hy0417sage.notes.Fragment;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -23,8 +23,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hy0417sage.notes.NotesAdapter.ImageAdapter;
-import com.hy0417sage.notes.NotesAdapter.NotesData;
+import com.hy0417sage.notes.FunctionActivity;
+import com.hy0417sage.notes.Adapter.ImageAdapter;
+import com.hy0417sage.notes.DataClass.MemoData;
+import com.hy0417sage.notes.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,18 +36,17 @@ import java.util.Objects;
  * 기능3. 메모 편집 및 작성
  * **/
 
-public class CreateOrModifyNotesFragment extends Fragment implements View.OnClickListener {
+public class MemoCreateOrModifyFragment extends Fragment implements View.OnClickListener {
 
-    public FunctionStorageActivity functionStorageActivity;
-    private LinearLayout fragmentCreateAndEdit;
+    public FunctionActivity functionStorageActivity;
     public EditText editTitle, editContent;
-
     public LinearLayoutManager horizontalLayoutManager;
-    private final List<NotesData> memoList = new ArrayList<>();
     public RecyclerView recyclerView;
     public RecyclerView.Adapter adapter;
     public Button addImgButton;
 
+    private final List<MemoData> memoList = new ArrayList<>();
+    private LinearLayout fragmentCreateAndEdit;
 
     @Override
     public void onDetach() {
@@ -55,12 +56,12 @@ public class CreateOrModifyNotesFragment extends Fragment implements View.OnClic
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        fragmentCreateAndEdit = (LinearLayout) inflater.inflate(R.layout.create_and_edit, container, false);
+        fragmentCreateAndEdit = (LinearLayout) inflater.inflate(R.layout.memo_createmodify_view, container, false);
         setHasOptionsMenu(true);
         Toolbar toolbar = fragmentCreateAndEdit.findViewById(R.id.toolbar);
         ((AppCompatActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(toolbar);
 
-        functionStorageActivity = (FunctionStorageActivity) getActivity();
+        functionStorageActivity = (FunctionActivity) getActivity();
 
         //1. 제목 입력란과 본문 입력란, 이미지 첨부란이 구분되어 있습니다.
         editTitle = (EditText) fragmentCreateAndEdit.findViewById(R.id.edit_title);
@@ -89,7 +90,7 @@ public class CreateOrModifyNotesFragment extends Fragment implements View.OnClic
          * 실시간으로 첨부되고 있는 이미지를 ImageAdapter로 볼 수 있습니다. */
         memoList.clear();
         for (int i = 0; i < functionStorageActivity.imgUrlList.size(); i++) {
-            NotesData memoData = new NotesData(functionStorageActivity.imgUrlList.get(i), "CreateAndEdit");
+            MemoData memoData = new MemoData(functionStorageActivity.imgUrlList.get(i), "CreateAndEdit");
             memoList.add(memoData);
         }
         adapter = new ImageAdapter(getActivity().getApplicationContext(), memoList);
