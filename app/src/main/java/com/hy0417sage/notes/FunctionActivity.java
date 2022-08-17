@@ -22,6 +22,8 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.hy0417sage.notes.DataBase.DBHelper;
+import com.hy0417sage.notes.Fragment.MemoCreateOrModifyFragment;
+import com.hy0417sage.notes.Fragment.MemoContentFragment;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,36 +40,29 @@ import java.util.List;
  * 데이터와 기능이 있는 액티비티 *
  **/
 
-public class FunctionStorageActivity extends AppCompatActivity {
-
-    public CreateOrModifyNotesFragment createOrModifyNotesFragment = new CreateOrModifyNotesFragment();
-    public NotesContentFragment notesContentFragment = new NotesContentFragment();
-
-    public long nowIndex;
-    public String title, content;
-    public String stringUrl;
+public class FunctionActivity extends AppCompatActivity {
 
     public DBHelper databaseHelper;
-    
+    public MemoCreateOrModifyFragment memoCreateOrModifyFragment = new MemoCreateOrModifyFragment();
+    public MemoContentFragment memoContentFragment = new MemoContentFragment();
+    public String title, content, stringUrl, linkData;
+    public List<Uri> imgUrlList = new ArrayList<Uri>();
+    public long nowIndex;
     public boolean isImg = false;
 
     private static final int CAMERA_CODE = 10;
     private static final int GALLERY_CODE = 0;
-    private Uri photoURI;
     private String currentPhotoPath;
-    public List<Uri> imgUrlList = new ArrayList<Uri>();
-
-    public String linkData;
+    private Uri photoURI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_interface);
+        setContentView(R.layout.activity_function);
 
         databaseHelper = new DBHelper(this);
         databaseHelper.open();
         databaseHelper.create();
-
     }
 
     // onStart : 액티비티가 화면에 표시되기 직전에 호출, 화면에 진입할 때마다 실행
@@ -121,7 +116,7 @@ public class FunctionStorageActivity extends AppCompatActivity {
 
         if (nowIndex == 0) {
             //intent로 받아온 값이 없다면 바로 메모 편집 및 작성으로 넘어갑니다.
-            onFragmentChange(createOrModifyNotesFragment);
+            onFragmentChange(memoCreateOrModifyFragment);
         } else {
             /* intent로 받아온 값이 있는경우 전역변수 title, content, string_url에 각각의 값을 넣어주어
              * 메모 리스트 화면에서 선택한 메모의 값을 불러와 메모 상세보기 화면에 보여줍니다. */
@@ -139,35 +134,35 @@ public class FunctionStorageActivity extends AppCompatActivity {
                     imgUrlList.add(u);
                 }
             }
-            onFragmentChange(notesContentFragment);
+            onFragmentChange(memoContentFragment);
         }
     }
 
     //기능2. 메모 저장
     public void saveTheMemo() {
-        title = createOrModifyNotesFragment.editTitle.getText().toString(); //create에 있는 에딧 가져와 저장
-        content = createOrModifyNotesFragment.editContent.getText().toString();
+        title = memoCreateOrModifyFragment.editTitle.getText().toString(); //create에 있는 에딧 가져와 저장
+        content = memoCreateOrModifyFragment.editContent.getText().toString();
         if (title.equals("") && content.equals("") && imgUrlList.isEmpty()) {
             Toast.makeText(this, "입력한 내용이 없어 저장하지 않았어요.", Toast.LENGTH_SHORT).show();
             onBackPressed();
         } else {
             databaseHelper.open();
             databaseHelper.insertColumn(title, content, imgUrlList.toString());
-            onFragmentChange(notesContentFragment);
+            onFragmentChange(memoContentFragment);
         }
     }
 
     //기능3. 기존 메모 편집
     public void editMemo() {
-        title = createOrModifyNotesFragment.editTitle.getText().toString();
-        content = createOrModifyNotesFragment.editContent.getText().toString();
+        title = memoCreateOrModifyFragment.editTitle.getText().toString();
+        content = memoCreateOrModifyFragment.editContent.getText().toString();
         if (title.equals("") && content.equals("") && imgUrlList.isEmpty()) {
             databaseHelper.deleteColumn(nowIndex);
             Toast.makeText(this, "입력한 내용이 없어 저장하지 않았어요.", Toast.LENGTH_SHORT).show();
             onBackPressed();
         } else {
             databaseHelper.updateColumn(nowIndex, title, content, imgUrlList.toString());
-            onFragmentChange(notesContentFragment);
+            onFragmentChange(memoContentFragment);
         }
     }
 
@@ -187,7 +182,7 @@ public class FunctionStorageActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         databaseHelper.deleteColumn(nowIndex);
-                        Toast.makeText(FunctionStorageActivity.this, "메모를 삭제하였습니다.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FunctionActivity.this, "메모를 삭제하였습니다.", Toast.LENGTH_SHORT).show();
                         onBackPressed();
                     }
                 })
@@ -245,7 +240,7 @@ public class FunctionStorageActivity extends AppCompatActivity {
     public void addImgUrl(){
         if (isImg) {
             imgUrlList.add(Uri.parse(linkData));
-            Intent intent = new Intent(FunctionStorageActivity.this, FunctionStorageActivity.class);
+            Intent intent = new Intent(FunctionActivity.this, FunctionActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
         } else {
@@ -260,7 +255,7 @@ public class FunctionStorageActivity extends AppCompatActivity {
     
     //기능3. 카메라 실행
     public void toRunCamera() {
-        int permission = ContextCompat.checkSelfPermission(FunctionStorageActivity.this, Manifest.permission.CAMERA);
+        int permission = ContextCompat.checkSelfPermission(FunctionActivity.this, Manifest.permission.CAMERA);
         if (permission == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 0);
         }else if(permission == PackageManager.PERMISSION_GRANTED){

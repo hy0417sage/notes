@@ -1,4 +1,4 @@
-package com.hy0417sage.notes.NotesAdapter;
+package com.hy0417sage.notes.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.hy0417sage.notes.FunctionStorageActivity;
+import com.hy0417sage.notes.DataClass.MemoData;
+import com.hy0417sage.notes.FunctionActivity;
 import com.hy0417sage.notes.R;
 
 import java.util.Arrays;
@@ -20,18 +21,18 @@ import java.util.List;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
-public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
+public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ViewHolder> {
 
     private Context context;
-    private final List<NotesData> notesDataList;
+    private final List<MemoData> memoDataList;
 
-    public NotesAdapter(Context context, List<NotesData> notesDataList) {
-        this.notesDataList = notesDataList;
+    public MemoAdapter(Context context, List<MemoData> memoDataList) {
+        this.memoDataList = memoDataList;
         this.context = context;
     }
 
-    public NotesAdapter(List<NotesData> notesDataList) {
-        this.notesDataList = notesDataList;
+    public MemoAdapter(List<MemoData> memoDataList) {
+        this.memoDataList = memoDataList;
     }
 
     @NonNull
@@ -44,19 +45,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        NotesData notesData = notesDataList.get(position);
+        MemoData memoData = memoDataList.get(position);
 
-        holder.tempIndex = notesData.getTempIndex();
-        holder.title.setText(notesData.getTitle()); //메모 제목
-        holder.content.setText(notesData.getContent()); //메모 글
-        holder.stringUrl = notesData.getStringUrlList().replace("[", "").replace("]", "");
+        holder.tempIndex = memoData.getTempIndex();
+        holder.title.setText(memoData.getTitle()); //메모 제목
+        holder.content.setText(memoData.getContent()); //메모 글
+        holder.stringUrl = memoData.getStringUrlList().replace("[", "").replace("]", "");
         List<String> pictureUrlList = Arrays.asList(holder.stringUrl.split(","));
         Glide.with(context).load(pictureUrlList.get(0)).override(300, 300).into(holder.imageView); //첫번째 이미지를 썸네일로 보여줍니다.
     }
 
     @Override
     public int getItemCount() {
-        return notesDataList.size();
+        return memoDataList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -79,7 +80,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context.getApplicationContext(), FunctionStorageActivity.class);
+                    Intent intent = new Intent(context.getApplicationContext(), FunctionActivity.class);
                     intent.putExtra("nowIndex", tempIndex);
                     intent.putExtra("title", title.getText());
                     intent.putExtra("content", content.getText());

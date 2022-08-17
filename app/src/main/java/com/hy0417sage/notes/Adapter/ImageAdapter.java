@@ -1,4 +1,4 @@
-package com.hy0417sage.notes.NotesAdapter;
+package com.hy0417sage.notes.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.hy0417sage.notes.DataClass.MemoData;
 import com.hy0417sage.notes.R;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
     private Context context;
-    private final List<NotesData> notesDataList;
+    private final List<MemoData> memoDataList;
     private OnItemClickListener onItemClickListener = null;
 
     public interface OnItemClickListener {
@@ -28,13 +29,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         this.onItemClickListener = onItemClickListener;
     }
 
-    public ImageAdapter(Context context, List<NotesData> notesDataList) {
-        this.notesDataList = notesDataList;
+    public ImageAdapter(Context context, List<MemoData> memoDataList) {
+        this.memoDataList = memoDataList;
         this.context = context;
     }
 
-    public ImageAdapter(List<NotesData> notesDataList) {
-        this.notesDataList = notesDataList;
+    public ImageAdapter(List<MemoData> memoDataList) {
+        this.memoDataList = memoDataList;
     }
 
     @NonNull
@@ -47,30 +48,30 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        NotesData notesData = notesDataList.get(position);
-        Glide.with(context).load(notesData.getPictureUrl()).override(300, 300).into(holder.imageView);
+        MemoData memoData = memoDataList.get(position);
+        Glide.with(context).load(memoData.getPictureUrl()).override(300, 300).into(holder.imageView);
 
         //메모 편집 및 작성 화면인 경우 cancel 아이콘은 표시해줍니다.
-        if (notesData.getActivityDiscrimination().equals("CreateAndEdit")) {
-            Glide.with(context).load(R.drawable.cancel).into(holder.icon);
+        if (memoData.getActivityDiscrimination().equals("CreateAndEdit")) {
+            Glide.with(context).load(R.drawable.cancel).into(holder.deleteImgIcon);
         }
     }
 
     @Override
     public int getItemCount() {
-        return notesDataList.size();
+        return memoDataList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView imageView;
-        public ImageView icon;
+        public ImageView deleteImgIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
-            icon = (ImageView) itemView.findViewById(R.id.icon);
+            deleteImgIcon = (ImageView) itemView.findViewById(R.id.icon);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
