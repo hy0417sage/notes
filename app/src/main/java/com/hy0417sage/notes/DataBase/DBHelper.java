@@ -12,71 +12,71 @@ public class DBHelper {
 
     private static final String DATABASE_NAME = "Notes.db";
     private static final int DATABASE_VERSION = 1;
-    public static SQLiteDatabase db;
-    private DatabaseHelper dbHelper;
-    private final Context ctx;
+    public static SQLiteDatabase database;
+    private DatabaseHelper databaseHelper;
+    private final Context context;
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
-        public DatabaseHelper(Context context, String name, CursorFactory factory, int version) {
-            super(context, name, factory, version);
+        public DatabaseHelper(Context context, String name, CursorFactory cursorFactory, int version) {
+            super(context, name, cursorFactory, version);
         }
 
         @Override
-        public void onCreate(SQLiteDatabase db) {
-            db.execSQL(DataBases.CreateDB.CREATE);
+        public void onCreate(SQLiteDatabase sqLiteDatabase) {
+            sqLiteDatabase.execSQL(DataBases.CreateDB.CREATE);
         }
 
         @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS " + DataBases.CreateDB.TABLE_NAME);
-            onCreate(db);
+        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DataBases.CreateDB.TABLE_NAME);
+            onCreate(sqLiteDatabase);
         }
     }
 
     public DBHelper(Context context) {
-        this.ctx = context;
+        this.context = context;
     }
 
     public void open() throws SQLException {
-        dbHelper = new DatabaseHelper(ctx, DATABASE_NAME, null, DATABASE_VERSION);
-        db = dbHelper.getWritableDatabase();
+        databaseHelper = new DatabaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
+        database = databaseHelper.getWritableDatabase();
     }
 
     public void create() {
-        dbHelper.onCreate(db);
+        databaseHelper.onCreate(database);
     }
 
     public void close() {
-        db.close();
+        database.close();
     }
 
-    public void insertColumn(String title, String content, String url) {
+    public void insertColumn(String title, String content, String pictureUrl) {
         ContentValues values = new ContentValues();
         values.put(DataBases.CreateDB.Title, title);
         values.put(DataBases.CreateDB.Content, content);
-        values.put(DataBases.CreateDB.Url, url);
-        db.insert(DataBases.CreateDB.TABLE_NAME, null, values);
+        values.put(DataBases.CreateDB.PictureUrl, pictureUrl);
+        database.insert(DataBases.CreateDB.TABLE_NAME, null, values);
     }
 
-    public void updateColumn(long id, String title, String content, String url) {
+    public void updateColumn(long id, String title, String content, String pictureUrl) {
         ContentValues values = new ContentValues();
         values.put(DataBases.CreateDB.Title, title);
         values.put(DataBases.CreateDB.Content, content);
-        values.put(DataBases.CreateDB.Url, url);
-        db.update(DataBases.CreateDB.TABLE_NAME, values, "_id=" + id, null);
+        values.put(DataBases.CreateDB.PictureUrl, pictureUrl);
+        database.update(DataBases.CreateDB.TABLE_NAME, values, "_id=" + id, null);
     }
 
     public void deleteColumn(long id) {
-        db.delete(DataBases.CreateDB.TABLE_NAME, "_id=" + id, null);
+        database.delete(DataBases.CreateDB.TABLE_NAME, "_id=" + id, null);
     }
 
     public Cursor selectColumns() {
-        return db.query(DataBases.CreateDB.TABLE_NAME, null, null, null, null, null, null);
+        return database.query(DataBases.CreateDB.TABLE_NAME, null, null, null, null, null, null);
     }
 
     public Cursor sortColumn(){
-        return db.rawQuery( "SELECT * FROM NotesTable ORDER BY " + "_id" + " DESC;", null);
+        return database.rawQuery( "SELECT * FROM NotesTable ORDER BY " + "_id" + " DESC;", null);
     }
 
 }

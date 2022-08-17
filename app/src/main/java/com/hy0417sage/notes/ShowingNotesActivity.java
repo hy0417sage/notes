@@ -33,7 +33,7 @@ public class ShowingNotesActivity extends AppCompatActivity implements View.OnCl
     private RecyclerView.Adapter adapter;
     public StaggeredGridLayoutManager staggeredGridLayoutManager;
 
-    private DBHelper dbHelper;
+    private DBHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +52,9 @@ public class ShowingNotesActivity extends AppCompatActivity implements View.OnCl
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
 
-        dbHelper = new DBHelper(this);
-        dbHelper.open();
-        dbHelper.create();
+        databaseHelper = new DBHelper(this);
+        databaseHelper.open();
+        databaseHelper.create();
 
     }
 
@@ -66,7 +66,7 @@ public class ShowingNotesActivity extends AppCompatActivity implements View.OnCl
 
     //1. 로컬 영역에서 저장된 메모를 읽어 리스트 형태로 회면에 표시합니다.
     public void showDatabase() {
-        Cursor iCursor = dbHelper.sortColumn();
+        Cursor iCursor = databaseHelper.sortColumn();
         memoList.clear();
 
         while (iCursor.moveToNext()) {

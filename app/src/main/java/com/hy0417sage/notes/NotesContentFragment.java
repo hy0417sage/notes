@@ -71,8 +71,8 @@ public class NotesContentFragment extends Fragment {
         /* 2. 메모에 첨부되어있는 이미지를 볼 수 있습니다.
          * CreateAndEdit을 통해 메모에 첨부되어있는 이미지를 ImageAdapter로 볼 수 있습니다. */
         memoList.clear();
-        for (int i = 0; i < functionStorageActivity.url.size(); i++) {
-            NotesData memo_data = new NotesData(functionStorageActivity.url.get(i), "Details");
+        for (int i = 0; i < functionStorageActivity.imgUrlList.size(); i++) {
+            NotesData memo_data = new NotesData(functionStorageActivity.imgUrlList.get(i), "Details");
             memoList.add(memo_data);
         }
 
@@ -82,12 +82,16 @@ public class NotesContentFragment extends Fragment {
         return fragmentDetails;
     }
 
+    public void init(){
+
+    }
+
     @SuppressLint("SetTextI18n")
     @Override
     public void onResume() {
         super.onResume();
         Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
-        imgCount.setText("사진 개수 : " + functionStorageActivity.url.size() + "개");
+        imgCount.setText("사진 개수 : " + functionStorageActivity.imgUrlList.size() + "개");
     }
 
     @Override
@@ -106,18 +110,18 @@ public class NotesContentFragment extends Fragment {
             //3. 상단 메뉴를 통해 메모 내용을 편집할 수 있습니다.
             case R.id.edit_button:
                 if (functionStorageActivity.nowIndex == 0) {
-                    functionStorageActivity.firstDataEditDelete();
+                    functionStorageActivity.newMemoEdit();
                 }
-                functionStorageActivity.onFragmentChange("CreateAndEdit");
+                functionStorageActivity.onFragmentChange(functionStorageActivity.createOrModifyNotesFragment);
                 break;
 
             //3. 상단 메뉴를 통해 메모 내용을 삭제할 수 있습니다.
             case R.id.delete_button:
                 if (functionStorageActivity.nowIndex == 0) {
-                    functionStorageActivity.firstDataEditDelete();
-                    functionStorageActivity.dbHelper.deleteColumn(functionStorageActivity.nowIndex);
+                    functionStorageActivity.newMemoEdit();
+                    functionStorageActivity.databaseHelper.deleteColumn(functionStorageActivity.nowIndex);
                 } else {
-                    functionStorageActivity.dataDelete();
+                    functionStorageActivity.deleteMemo();
                 }
                 break;
         }

@@ -46,6 +46,7 @@ public class CreateOrModifyNotesFragment extends Fragment implements View.OnClic
     public RecyclerView.Adapter adapter;
     public Button addImgButton;
 
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -87,8 +88,8 @@ public class CreateOrModifyNotesFragment extends Fragment implements View.OnClic
         /* 2. 메모에 이미지를 실시간으로 첨부합니다. (생명주기 onResume 사용)
          * 실시간으로 첨부되고 있는 이미지를 ImageAdapter로 볼 수 있습니다. */
         memoList.clear();
-        for (int i = 0; i < functionStorageActivity.url.size(); i++) {
-            NotesData memoData = new NotesData(functionStorageActivity.url.get(i), "CreateAndEdit");
+        for (int i = 0; i < functionStorageActivity.imgUrlList.size(); i++) {
+            NotesData memoData = new NotesData(functionStorageActivity.imgUrlList.get(i), "CreateAndEdit");
             memoList.add(memoData);
         }
         adapter = new ImageAdapter(getActivity().getApplicationContext(), memoList);
@@ -98,7 +99,7 @@ public class CreateOrModifyNotesFragment extends Fragment implements View.OnClic
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onItemClick(View v, int position) {
-                functionStorageActivity.url.remove(memoList.get(position).getUrl());
+                functionStorageActivity.imgUrlList.remove(memoList.get(position).getPictureUrl());
                 memoList.remove(memoList.get(position));
                 adapter.notifyDataSetChanged(); //이미지가 삭제되는것을 실시간으로 보여줍니다.
                 Toast.makeText(fragmentCreateAndEdit.getContext(), "이미지가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
@@ -118,9 +119,9 @@ public class CreateOrModifyNotesFragment extends Fragment implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save_button) {
             if (functionStorageActivity.nowIndex == 0) {
-                functionStorageActivity.dataInsert();
+                functionStorageActivity.saveTheMemo();
             } else {
-                functionStorageActivity.dataEdit();
+                functionStorageActivity.editMemo();
             }
         }
         return super.onOptionsItemSelected(item);
@@ -131,20 +132,23 @@ public class CreateOrModifyNotesFragment extends Fragment implements View.OnClic
         /*2. 이미지 첨부란의 추가 버튼을 통해 이미지 첨부가 가능합니다.
          * 총 방법은 3 가지이며 선택 다이얼로그를 사용하여 첨부 방법을 선택할 수 있도록 하였습니다. */
         if (v.getId() == R.id.add_img_button) {
-            final CharSequence[] items = {"@string/camera", "@sting/gallery", "@sting/link"};
+            final CharSequence[] items = {getResources().getString(R.string.camera),
+                    getResources().getString(R.string.gallery),
+                    getResources().getString(R.string.link)};
+
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(fragmentCreateAndEdit.getContext());
-            alertDialogBuilder.setTitle("@string/add_pic");
+            alertDialogBuilder.setTitle(getResources().getString(R.string.add_pic));
+
             alertDialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    if (items[id].equals("@string/camera")) {
-                        functionStorageActivity.requirePermission();
-                        functionStorageActivity.camera();
+                    if (id == 0) {
+                        functionStorageActivity.toRunCamera();
+                        functionStorageActivity.toRunCamera();
+                    } else if (id == 1) {
+                        functionStorageActivity.showPhotoAlbum();
 
-                    } else if (items[id].equals("@sting/gallery")) {
-                        functionStorageActivity.gallery();
-
-                    } else if (items[id].equals("@sting/link")) {
-                        functionStorageActivity.linkDialog();
+                    } else if (id == 2) {
+                        functionStorageActivity.inputImgLinkDialog();
                     }
                     dialog.dismiss();
                 }

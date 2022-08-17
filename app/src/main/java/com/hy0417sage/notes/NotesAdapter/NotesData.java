@@ -9,7 +9,7 @@ public class NotesData {
     public String content;
     public String stringUrlList;
 
-    public Uri url;
+    public Uri pictureUrl;
     public String activityDiscrimination;
 
     public NotesData( ) {
@@ -22,8 +22,8 @@ public class NotesData {
         this.stringUrlList = stringUrlList;
     }
 
-    public NotesData(Uri url, String activityDiscrimination) {
-        this.url = url;
+    public NotesData(Uri pictureUrl, String activityDiscrimination) {
+        this.pictureUrl = pictureUrl;
         this.activityDiscrimination = activityDiscrimination;
     }
 
@@ -43,8 +43,8 @@ public class NotesData {
         return stringUrlList;
     }
 
-    public Uri getUrl() {
-        return url;
+    public Uri getPictureUrl() {
+        return pictureUrl;
     }
 
     public String getActivityDiscrimination() {

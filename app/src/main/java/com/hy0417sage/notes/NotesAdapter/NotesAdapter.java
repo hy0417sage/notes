@@ -23,15 +23,15 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
 
     private Context context;
-    private final List<NotesData> listData;
+    private final List<NotesData> notesDataList;
 
-    public NotesAdapter(Context context, List<NotesData> listData) {
-        this.listData = listData;
+    public NotesAdapter(Context context, List<NotesData> notesDataList) {
+        this.notesDataList = notesDataList;
         this.context = context;
     }
 
-    public NotesAdapter(List<NotesData> listData) {
-        this.listData = listData;
+    public NotesAdapter(List<NotesData> notesDataList) {
+        this.notesDataList = notesDataList;
     }
 
     @NonNull
@@ -44,19 +44,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        NotesData notesData = listData.get(position);
+        NotesData notesData = notesDataList.get(position);
 
         holder.tempIndex = notesData.getTempIndex();
         holder.title.setText(notesData.getTitle()); //메모 제목
         holder.content.setText(notesData.getContent()); //메모 글
         holder.stringUrl = notesData.getStringUrlList().replace("[", "").replace("]", "");
-        List<String> list = Arrays.asList(holder.stringUrl.split(","));
-        Glide.with(context).load(list.get(0)).override(300, 300).into(holder.imageView); //첫번째 이미지를 썸네일로 보여줍니다.
+        List<String> pictureUrlList = Arrays.asList(holder.stringUrl.split(","));
+        Glide.with(context).load(pictureUrlList.get(0)).override(300, 300).into(holder.imageView); //첫번째 이미지를 썸네일로 보여줍니다.
     }
 
     @Override
     public int getItemCount() {
-        return listData.size();
+        return notesDataList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
