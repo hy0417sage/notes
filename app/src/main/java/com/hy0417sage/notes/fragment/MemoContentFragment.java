@@ -46,21 +46,21 @@ public class MemoContentFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        LinearLayout memoContent = (LinearLayout) inflater.inflate(R.layout.memo_content_view, container, false);
+        LinearLayout memoContentView = (LinearLayout) inflater.inflate(R.layout.memo_content_view, container, false);
         setHasOptionsMenu(true);
 
-        Toolbar toolbar = memoContent.findViewById(R.id.toolbar);
+        Toolbar toolbar = memoContentView.findViewById(R.id.toolbar);
         ((AppCompatActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(toolbar);
 
         functionActivity = (FunctionActivity) getActivity();
 
-        textTitle = (TextView) memoContent.findViewById(R.id.text_title);
-        textContent = (TextView) memoContent.findViewById(R.id.text_content);
-        imgCount = (TextView) memoContent.findViewById(R.id.img_count);
+        textTitle = (TextView) memoContentView.findViewById(R.id.text_title);
+        textContent = (TextView) memoContentView.findViewById(R.id.text_content);
+        imgCount = (TextView) memoContentView.findViewById(R.id.img_count);
 
         horizontalLayoutManager
                 = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
-        recyclerView = (RecyclerView) memoContent.findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) memoContentView.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setLayoutManager(horizontalLayoutManager);
@@ -74,14 +74,14 @@ public class MemoContentFragment extends Fragment {
          * CreateAndEdit을 통해 메모에 첨부되어있는 이미지를 ImageAdapter로 볼 수 있습니다. */
         memoList.clear();
         for (int i = 0; i < functionActivity.imgUrlList.size(); i++) {
-            MemoData memo_data = new MemoData(functionActivity.imgUrlList.get(i), "Details");
-            memoList.add(memo_data);
+            MemoData memoData = new MemoData(functionActivity.imgUrlList.get(i), "Details");
+            memoList.add(memoData);
         }
 
         adapter = new ImageAdapter(getActivity().getApplicationContext(), memoList);
         recyclerView.setAdapter(adapter);
 
-        return memoContent;
+        return memoContentView;
     }
 
     public void init(){
