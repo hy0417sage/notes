@@ -1,4 +1,4 @@
-package com.hy0417sage.notes.Adapter;
+package com.hy0417sage.notes.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.hy0417sage.notes.DataClass.MemoData;
+import com.hy0417sage.notes.dataclass.MemoData;
 import com.hy0417sage.notes.R;
 
 import java.util.List;

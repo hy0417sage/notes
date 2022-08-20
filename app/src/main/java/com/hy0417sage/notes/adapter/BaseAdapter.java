@@ -1,4 +1,4 @@
-package com.hy0417sage.notes.Adapter;
+package com.hy0417sage.notes.adapter;
 
 import android.view.ViewGroup;
 
