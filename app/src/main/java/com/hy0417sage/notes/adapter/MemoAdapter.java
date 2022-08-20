@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.hy0417sage.notes.dataclass.MemoData;
+import com.hy0417sage.notes.model.MemoModel;
 import com.hy0417sage.notes.FunctionActivity;
 import com.hy0417sage.notes.R;
 
@@ -24,14 +24,14 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ViewHolder> {
 
     private Context context;
-    private final List<MemoData> memoDataList;
+    private final List<MemoModel> memoDataList;
 
-    public MemoAdapter(Context context, List<MemoData> memoDataList) {
+    public MemoAdapter(Context context, List<MemoModel> memoDataList) {
         this.memoDataList = memoDataList;
         this.context = context;
     }
 
-    public MemoAdapter(List<MemoData> memoDataList) {
+    public MemoAdapter(List<MemoModel> memoDataList) {
         this.memoDataList = memoDataList;
     }
 
@@ -45,7 +45,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        MemoData memoData = memoDataList.get(position);
+        MemoModel memoData = memoDataList.get(position);
 
         holder.tempIndex = memoData.getTempIndex();
         holder.title.setText(memoData.getTitle()); //메모 제목

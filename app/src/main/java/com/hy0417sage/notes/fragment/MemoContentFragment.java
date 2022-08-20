@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hy0417sage.notes.FunctionActivity;
 import com.hy0417sage.notes.adapter.ImageAdapter;
-import com.hy0417sage.notes.dataclass.MemoData;
+import com.hy0417sage.notes.model.MemoModel;
 import com.hy0417sage.notes.R;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class MemoContentFragment extends Fragment {
     public TextView textTitle;
     public TextView textContent;
     public TextView imgCount;
-    public List<MemoData> memoList = new ArrayList<>();
+    public List<MemoModel> memoList = new ArrayList<>();
     public LinearLayoutManager horizontalLayoutManager;
     public RecyclerView recyclerView;
     public RecyclerView.Adapter adapter;
@@ -74,7 +74,7 @@ public class MemoContentFragment extends Fragment {
          * CreateAndEdit을 통해 메모에 첨부되어있는 이미지를 ImageAdapter로 볼 수 있습니다. */
         memoList.clear();
         for (int i = 0; i < functionActivity.imgUrlList.size(); i++) {
-            MemoData memoData = new MemoData(functionActivity.imgUrlList.get(i), "Details");
+            MemoModel memoData = new MemoModel(functionActivity.imgUrlList.get(i), "Details");
             memoList.add(memoData);
         }
 
