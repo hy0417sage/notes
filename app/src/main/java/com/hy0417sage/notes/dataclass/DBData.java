@@ -1,4 +1,4 @@
-package com.hy0417sage.notes.DataClass;
+package com.hy0417sage.notes.dataclass;
 
 public class DBData {
 

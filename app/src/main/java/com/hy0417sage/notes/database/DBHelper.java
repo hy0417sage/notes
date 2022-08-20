@@ -1,4 +1,4 @@
-package com.hy0417sage.notes.DataBase;
+package com.hy0417sage.notes.database;
 
 import android.content.ContentValues;
 import android.content.Context;

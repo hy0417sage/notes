@@ -1,4 +1,4 @@
-package com.hy0417sage.notes.Fragment;
+package com.hy0417sage.notes.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -20,8 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hy0417sage.notes.FunctionActivity;
-import com.hy0417sage.notes.Adapter.ImageAdapter;
-import com.hy0417sage.notes.DataClass.MemoData;
+import com.hy0417sage.notes.adapter.ImageAdapter;
+import com.hy0417sage.notes.dataclass.MemoData;
 import com.hy0417sage.notes.R;
 
 import java.util.ArrayList;
