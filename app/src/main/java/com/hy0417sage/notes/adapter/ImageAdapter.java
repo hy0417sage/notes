@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.hy0417sage.notes.dataclass.MemoData;
+import com.hy0417sage.notes.model.MemoModel;
 import com.hy0417sage.notes.R;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
     private Context context;
-    private final List<MemoData> memoDataList;
+    private final List<MemoModel> memoDataList;
     private OnItemClickListener onItemClickListener = null;
 
     public interface OnItemClickListener {
@@ -29,12 +29,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         this.onItemClickListener = onItemClickListener;
     }
 
-    public ImageAdapter(Context context, List<MemoData> memoDataList) {
+    public ImageAdapter(Context context, List<MemoModel> memoDataList) {
         this.memoDataList = memoDataList;
         this.context = context;
     }
 
-    public ImageAdapter(List<MemoData> memoDataList) {
+    public ImageAdapter(List<MemoModel> memoDataList) {
         this.memoDataList = memoDataList;
     }
 
@@ -48,7 +48,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        MemoData memoData = memoDataList.get(position);
+        MemoModel memoData = memoDataList.get(position);
         Glide.with(context).load(memoData.getPictureUrl()).override(300, 300).into(holder.imageView);
 
         //메모 편집 및 작성 화면인 경우 cancel 아이콘은 표시해줍니다.

@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hy0417sage.notes.FunctionActivity;
 import com.hy0417sage.notes.adapter.ImageAdapter;
-import com.hy0417sage.notes.dataclass.MemoData;
+import com.hy0417sage.notes.model.MemoModel;
 import com.hy0417sage.notes.R;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class MemoCreateOrModifyFragment extends Fragment implements View.OnClick
     public RecyclerView.Adapter adapter;
     public Button addImgButton;
 
-    private final List<MemoData> memoList = new ArrayList<>();
+    private final List<MemoModel> memoList = new ArrayList<>();
     private LinearLayout fragmentCreateAndEdit;
 
     @Override
@@ -90,7 +90,7 @@ public class MemoCreateOrModifyFragment extends Fragment implements View.OnClick
          * 실시간으로 첨부되고 있는 이미지를 ImageAdapter로 볼 수 있습니다. */
         memoList.clear();
         for (int i = 0; i < functionStorageActivity.imgUrlList.size(); i++) {
-            MemoData memoData = new MemoData(functionStorageActivity.imgUrlList.get(i), "CreateAndEdit");
+            MemoModel memoData = new MemoModel(functionStorageActivity.imgUrlList.get(i), "CreateAndEdit");
             memoList.add(memoData);
         }
         adapter = new ImageAdapter(getActivity().getApplicationContext(), memoList);
@@ -143,7 +143,6 @@ public class MemoCreateOrModifyFragment extends Fragment implements View.OnClick
             alertDialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     if (id == 0) {
-                        functionStorageActivity.toRunCamera();
                         functionStorageActivity.toRunCamera();
                     } else if (id == 1) {
                         functionStorageActivity.showPhotoAlbum();

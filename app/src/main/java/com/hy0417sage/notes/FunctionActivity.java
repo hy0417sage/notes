@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -21,9 +22,9 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
-import com.hy0417sage.notes.DataBase.DBHelper;
-import com.hy0417sage.notes.Fragment.MemoCreateOrModifyFragment;
-import com.hy0417sage.notes.Fragment.MemoContentFragment;
+import com.hy0417sage.notes.database.DBHelper;
+import com.hy0417sage.notes.fragment.MemoContentFragment;
+import com.hy0417sage.notes.fragment.MemoCreateOrModifyFragment;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,6 +64,7 @@ public class FunctionActivity extends AppCompatActivity {
         databaseHelper = new DBHelper(this);
         databaseHelper.open();
         databaseHelper.create();
+        Log.d("FunctionActivity", "onResume()");
     }
 
     // onStart : 액티비티가 화면에 표시되기 직전에 호출, 화면에 진입할 때마다 실행
@@ -70,7 +72,8 @@ public class FunctionActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         settingMemo();
-        toRunCamera();
+        //toRunCamera();
+        Log.d("FunctionActivity", "onStart()");
     }
 
     // onResume : 잠시 액티비티가 일시정지 되었다가 돌아오는 경우 호출, 액티비티가 재개되었을 때 실행
@@ -78,39 +81,46 @@ public class FunctionActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         deleteNullUrl();
+        Log.d("FunctionActivity", "onResume()");
     }
 
     // onPause : 방해되는 이벤트가 발생하면 호출, 실행할 필요가 없는 기능들을 일시정지
     @Override
     public void onPause() {
         super.onPause();
+        Log.d("FunctionActivity", "onPause()");
     }
 
     // onStop : 액티비티가 사용자에게 더이상 보이지 않으면 호출
     @Override
     public void onStop() {
         super.onStop();
+        Log.d("FunctionActivity", "onStop()");
     }
 
     // onRestart : 홈으로 나갔다가 다시 돌아오거나 다른 액티비티로 갔다가 뒤로 가기 버튼을 통해서 돌아오는 경우 호출
     @Override
     public void onRestart() {
         super.onRestart();
+        Log.d("FunctionActivity", "onRestart()");
     }
 
     // onDestroy : 앱을 종료하는 경우 호출
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("FunctionActivity", "onDestroy()");
     }
 
     //onFragmentChange 함수로 화면을 전환할 수 있도록 하였습니다.
     public void onFragmentChange(Fragment fragment) {
+        Log.d("FunctionActivity", "onFragmentChange() : " + fragment);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
     }
 
     //기능 2&3. 메모 셋팅
     public void settingMemo() {
+        Log.d("FunctionActivity", "settingMemo()");
         Intent intent = getIntent();
         nowIndex = intent.getLongExtra("nowIndex", 0);
 
@@ -140,6 +150,7 @@ public class FunctionActivity extends AppCompatActivity {
 
     //기능2. 메모 저장
     public void saveTheMemo() {
+        Log.d("FunctionActivity", "saveTheMemo()");
         title = memoCreateOrModifyFragment.editTitle.getText().toString(); //create에 있는 에딧 가져와 저장
         content = memoCreateOrModifyFragment.editContent.getText().toString();
         if (title.equals("") && content.equals("") && imgUrlList.isEmpty()) {
@@ -154,6 +165,7 @@ public class FunctionActivity extends AppCompatActivity {
 
     //기능3. 기존 메모 편집
     public void editMemo() {
+        Log.d("FunctionActivity", "editMemo()");
         title = memoCreateOrModifyFragment.editTitle.getText().toString();
         content = memoCreateOrModifyFragment.editContent.getText().toString();
         if (title.equals("") && content.equals("") && imgUrlList.isEmpty()) {
@@ -168,6 +180,7 @@ public class FunctionActivity extends AppCompatActivity {
 
     //기능3. 새로 생성한 메모 편집
     public void newMemoEdit() {
+        Log.d("FunctionActivity", "newMemoEdit()");
         Cursor iCursor = databaseHelper.selectColumns();
         iCursor.moveToLast();
         //새로 생성한 메모을 메모리스트를 거치치 않고 수정할 경우 로컬 영역에 저장된 마지막 nowIndex를 넣으줍니다.
@@ -176,6 +189,7 @@ public class FunctionActivity extends AppCompatActivity {
 
     //기능3. 메모 삭제
     public void deleteMemo() {
+        Log.d("FunctionActivity", "deleteMemo()");
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setMessage("메모를 삭제 하시겠습니까?")
                 .setPositiveButton("삭제", new DialogInterface.OnClickListener() {
@@ -197,6 +211,7 @@ public class FunctionActivity extends AppCompatActivity {
 
     //이미지 링크 입력 다이얼로그
     public void inputImgLinkDialog() {
+        Log.d("FunctionActivity", "inputImgLinkDialog()");
         final EditText link = new EditText(this);
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("이미지 링크를 입력해 주세요.").setView(link)
@@ -219,6 +234,7 @@ public class FunctionActivity extends AppCompatActivity {
 
     //기능3-1. 이미지 링크인지 확인합니다.
     public void checkImgLink(){
+        Log.d("FunctionActivity", "checkImgLink()");
         Thread thread = new Thread() {
             @Override
             public void run() {
@@ -238,6 +254,7 @@ public class FunctionActivity extends AppCompatActivity {
 
     //기능3-2. 이미지 링크인 경우 photoUrlList에 url을 추가합니다.
     public void addImgUrl(){
+        Log.d("FunctionActivity", "addImgUrl()");
         if (isImg) {
             imgUrlList.add(Uri.parse(linkData));
             Intent intent = new Intent(FunctionActivity.this, FunctionActivity.class);
@@ -255,6 +272,7 @@ public class FunctionActivity extends AppCompatActivity {
     
     //기능3. 카메라 실행
     public void toRunCamera() {
+        Log.d("FunctionActivity", "toRunCamera()");
         int permission = ContextCompat.checkSelfPermission(FunctionActivity.this, Manifest.permission.CAMERA);
         if (permission == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 0);
@@ -266,6 +284,7 @@ public class FunctionActivity extends AppCompatActivity {
 
     //기능3. 카메라 이미지 파일 생성
     public void dispatchTakePictureIntent() {
+        Log.d("FunctionActivity", "dispatchTakePictureIntent()");
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
@@ -284,6 +303,7 @@ public class FunctionActivity extends AppCompatActivity {
     }
 
     private File createImageFile() throws IOException {
+        Log.d("FunctionActivity", "createImageFile()");
         @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -298,6 +318,7 @@ public class FunctionActivity extends AppCompatActivity {
 
     //기능3. 갤러리를 보여줍니다.
     public void showPhotoAlbum() {
+        Log.d("FunctionActivity", "showPhotoAlbum()");
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -306,6 +327,7 @@ public class FunctionActivity extends AppCompatActivity {
 
     //이미지 null url 삭제
     public void deleteNullUrl() {
+        Log.d("FunctionActivity", "deleteNullUrl()");
         for (int i = 0; i < imgUrlList.size(); i++) {
             if (imgUrlList.get(i).toString().equals("")) {
                 imgUrlList.remove(imgUrlList.get(i));

@@ -6,9 +6,9 @@ import android.database.Cursor;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.hy0417sage.notes.DataBase.DBHelper;
-import com.hy0417sage.notes.Adapter.MemoAdapter;
-import com.hy0417sage.notes.DataClass.MemoData;
+import com.hy0417sage.notes.adapter.MemoAdapter;
+import com.hy0417sage.notes.database.DBHelper;
+import com.hy0417sage.notes.model.MemoModel;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 
@@ -30,7 +31,7 @@ public class ShowAllMemoActivity extends AppCompatActivity implements View.OnCli
 
     public StaggeredGridLayoutManager staggeredGridLayoutManager;
     
-    private final List<MemoData> memoDataList = new ArrayList<>();
+    private final List<MemoModel> memoDataList = new ArrayList<>();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private DBHelper databaseHelper;
@@ -55,12 +56,20 @@ public class ShowAllMemoActivity extends AppCompatActivity implements View.OnCli
         databaseHelper = new DBHelper(this);
         databaseHelper.open();
         databaseHelper.create();
+
+        //2. Memo Adapter로 메모 데이터를 넘겨 이미지의 썸네일 제목 글의 일부를 보여줍니다.
+        //리스트 메모 클릭시 상세화면 이동은 Memo Adapter의 itemView.setOnClickListener로 데이터를 넘겨 구현하였습니다.
+        adapter = new MemoAdapter(this, memoDataList); //TODO :
+        recyclerView.setAdapter(adapter);
+        Log.d("ShowAllMemoActivity", "onCreate()");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         showExistingMemo();
+
+        Log.d("ShowAllMemoActivity", "onResume()");
     }
 
     //1. 로컬 영역에서 저장된 메모를 읽어 리스트 형태로 회면에 표시합니다.
@@ -73,14 +82,11 @@ public class ShowAllMemoActivity extends AppCompatActivity implements View.OnCli
             String tempTitle = iCursor.getString(iCursor.getColumnIndex("title"));
             String tempContent = iCursor.getString(iCursor.getColumnIndex("content"));
             String tempUrl = iCursor.getString(iCursor.getColumnIndex("url"));
-            MemoData memoData = new MemoData(tempIndex, tempTitle, tempContent, tempUrl);
+            MemoModel memoData = new MemoModel(tempIndex, tempTitle, tempContent, tempUrl);
             this.memoDataList.add(memoData);
         }
 
-        //2. MainAdapter로 메모 데이터를 넘겨 이미지의 썸네일 제목 글의 일부를 보여줍니다.
-        //리스트 메모 클릭시 상세화면 이동은 MainAdapter의 itemView.setOnClickListener로 데이터를 넘겨 구현하였습니다.
-        adapter = new MemoAdapter(getApplicationContext(), memoDataList);
-        recyclerView.setAdapter(adapter);
+        Log.d("ShowAllMemoActivity", "showExistingMemo()");
     }
 
     @Override
@@ -94,7 +100,7 @@ public class ShowAllMemoActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         //4. 새 메모를 작성하기 위해 메모 작성 화면으로 이동합니다.
         if (v.getId() == R.id.go_to_create_and_edit_button) {
-            startActivity(new Intent(getApplicationContext(), FunctionActivity.class));
+            startActivity(new Intent(this, FunctionActivity.class));
         }
     }
 }

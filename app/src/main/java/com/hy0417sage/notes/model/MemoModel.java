@@ -1,8 +1,8 @@
-package com.hy0417sage.notes.dataclass;
+package com.hy0417sage.notes.model;
 
 import android.net.Uri;
 
-public class MemoData {
+public class MemoModel {
 
     public long tempIndex;
     public String title;
@@ -11,14 +11,14 @@ public class MemoData {
     public Uri pictureUrl;
     public String activityDiscrimination;
 
-    public MemoData(Long tempIndex, String title, String content, String stringUrlList) {
+    public MemoModel(Long tempIndex, String title, String content, String stringUrlList) {
         this.tempIndex = tempIndex;
         this.title = title;
         this.content = content;
         this.stringUrlList = stringUrlList;
     }
 
-    public MemoData(Uri pictureUrl, String activityDiscrimination) {
+    public MemoModel(Uri pictureUrl, String activityDiscrimination) {
         this.pictureUrl = pictureUrl;
         this.activityDiscrimination = activityDiscrimination;
     }
