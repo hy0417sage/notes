@@ -1,14 +1,16 @@
 package com.hy0417sage.notes;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.hy0417sage.notes.adapter.MemoAdapter;
+import com.hy0417sage.notes.adapter.BaseAdapter;
 import com.hy0417sage.notes.database.DBHelper;
-import com.hy0417sage.notes.model.MemoModel;
+import com.hy0417sage.notes.db.MemoDatabase;
+import com.hy0417sage.notes.db.MemoEntity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -29,11 +31,18 @@ import java.util.List;
 
 public class ShowAllMemoActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private MemoDatabase memoDatabase = null;
+
     public StaggeredGridLayoutManager staggeredGridLayoutManager;
     
-    private final List<MemoModel> memoDataList = new ArrayList<>();
+    private List<MemoEntity> memoEntityList = new ArrayList<>();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
+
+
+    private Context context = null;
+
+
     private DBHelper databaseHelper;
 
     @Override
@@ -45,6 +54,19 @@ public class ShowAllMemoActivity extends AppCompatActivity implements View.OnCli
         FloatingActionButton fab = findViewById(R.id.go_to_create_and_edit_button);
         fab.setOnClickListener(this);
 
+        memoDatabase = MemoDatabase.getInstance(this);
+
+        class InsertRunnable implements Runnable{
+
+            @Override
+            public void run(){
+
+            }
+        }
+        InsertRunnable insertRunnable = new InsertRunnable();
+        Thread thread = new Thread(insertRunnable);
+        thread.start();
+
         staggeredGridLayoutManager
                 = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
 
@@ -52,14 +74,16 @@ public class ShowAllMemoActivity extends AppCompatActivity implements View.OnCli
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
+//
+//        databaseHelper = new DBHelper(this);
+//        databaseHelper.open();
+//        databaseHelper.create();
 
-        databaseHelper = new DBHelper(this);
-        databaseHelper.open();
-        databaseHelper.create();
+        showExistingMemo();
 
         //2. Memo Adapter로 메모 데이터를 넘겨 이미지의 썸네일 제목 글의 일부를 보여줍니다.
         //리스트 메모 클릭시 상세화면 이동은 Memo Adapter의 itemView.setOnClickListener로 데이터를 넘겨 구현하였습니다.
-        adapter = new MemoAdapter(this, memoDataList); //TODO :
+        adapter = new BaseAdapter(this, memoEntityList); //TODO :
         recyclerView.setAdapter(adapter);
         Log.d("ShowAllMemoActivity", "onCreate()");
     }
@@ -67,24 +91,59 @@ public class ShowAllMemoActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onResume() {
         super.onResume();
-        showExistingMemo();
+
 
         Log.d("ShowAllMemoActivity", "onResume()");
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MemoDatabase.destroyInstance();
+        Log.d("FunctionActivity", "onDestroy()");
+    }
+
+
     //1. 로컬 영역에서 저장된 메모를 읽어 리스트 형태로 회면에 표시합니다.
     public void showExistingMemo() {
         Cursor iCursor = databaseHelper.sortColumn();
-        memoDataList.clear();
+//        memoDataList.clear();
 
-        while (iCursor.moveToNext()) {
-            Long tempIndex = iCursor.getLong(iCursor.getColumnIndex("_id"));
-            String tempTitle = iCursor.getString(iCursor.getColumnIndex("title"));
-            String tempContent = iCursor.getString(iCursor.getColumnIndex("content"));
-            String tempUrl = iCursor.getString(iCursor.getColumnIndex("url"));
-            MemoModel memoData = new MemoModel(tempIndex, tempTitle, tempContent, tempUrl);
-            this.memoDataList.add(memoData);
+//        if(memoDataList.isEmpty()) {
+//            while (iCursor.moveToNext()) {
+//                Long tempIndex = iCursor.getLong(iCursor.getColumnIndex("_id"));
+//                String tempTitle = iCursor.getString(iCursor.getColumnIndex("title"));
+//                String tempContent = iCursor.getString(iCursor.getColumnIndex("content"));
+//                String tempUrl = iCursor.getString(iCursor.getColumnIndex("pictureUrl"));
+//                MemoModel memoData = new MemoModel(tempIndex, tempTitle, tempContent, tempUrl);
+//                this.memoDataList.add(memoData);
+//            }
+//        }else{
+//
+//        }
+
+
+        // DB 생성
+         memoDatabase = MemoDatabase.getInstance(this);
+
+        // main thread에서 DB 접근 불가 => data 읽고 쓸 때 thread 사용하기
+        class InsertRunnable implements Runnable {
+
+            @Override
+            public void run() {
+                try {
+                    memoEntityList = memoDatabase.getInstance(context).memoDao().getAll();
+                    adapter = new BaseAdapter(context, memoEntityList);
+                    adapter.notifyDataSetChanged();
+                }
+                catch (Exception e) {
+
+                }
+            }
         }
+        InsertRunnable insertRunnable = new InsertRunnable();
+        Thread t = new Thread(insertRunnable);
+        t.start();
 
         Log.d("ShowAllMemoActivity", "showExistingMemo()");
     }
