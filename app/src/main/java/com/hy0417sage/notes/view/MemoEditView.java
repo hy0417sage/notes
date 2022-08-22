@@ -1,4 +1,4 @@
-package com.hy0417sage.notes.fragment;
+package com.hy0417sage.notes.view;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -36,7 +36,7 @@ import java.util.Objects;
  * 기능3. 메모 편집 및 작성
  * **/
 
-public class MemoCreateOrModifyFragment extends Fragment implements View.OnClickListener {
+public class MemoEditView extends Fragment implements View.OnClickListener {
 
     public FunctionActivity functionStorageActivity;
     public EditText editTitle, editContent;
