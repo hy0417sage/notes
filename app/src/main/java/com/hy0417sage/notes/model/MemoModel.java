@@ -4,12 +4,12 @@ import android.net.Uri;
 
 public class MemoModel {
 
-    public long tempIndex;
-    public String title;
-    public String content;
-    public String stringUrlList;
-    public Uri pictureUrl;
-    public String activityDiscrimination;
+    private long tempIndex;
+    private String title;
+    private String content;
+    private String stringUrlList;
+    private Uri pictureUrl;
+    private String activityDiscrimination;
 
     public MemoModel(Long tempIndex, String title, String content, String stringUrlList) {
         this.tempIndex = tempIndex;

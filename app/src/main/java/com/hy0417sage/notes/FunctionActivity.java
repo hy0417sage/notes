@@ -2,6 +2,7 @@ package com.hy0417sage.notes;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,6 +24,8 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.hy0417sage.notes.database.DBHelper;
+import com.hy0417sage.notes.db.MemoDatabase;
+import com.hy0417sage.notes.db.MemoEntity;
 import com.hy0417sage.notes.fragment.MemoContentFragment;
 import com.hy0417sage.notes.fragment.MemoCreateOrModifyFragment;
 
@@ -64,6 +67,8 @@ public class FunctionActivity extends AppCompatActivity {
         databaseHelper = new DBHelper(this);
         databaseHelper.open();
         databaseHelper.create();
+
+
         Log.d("FunctionActivity", "onResume()");
     }
 
@@ -109,6 +114,7 @@ public class FunctionActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        MemoDatabase.destroyInstance();
         Log.d("FunctionActivity", "onDestroy()");
     }
 
@@ -147,6 +153,7 @@ public class FunctionActivity extends AppCompatActivity {
             onFragmentChange(memoContentFragment);
         }
     }
+    private Context context;
 
     //기능2. 메모 저장
     public void saveTheMemo() {
@@ -157,8 +164,22 @@ public class FunctionActivity extends AppCompatActivity {
             Toast.makeText(this, "입력한 내용이 없어 저장하지 않았어요.", Toast.LENGTH_SHORT).show();
             onBackPressed();
         } else {
-            databaseHelper.open();
-            databaseHelper.insertColumn(title, content, imgUrlList.toString());
+//            databaseHelper.open();
+//            databaseHelper.insertColumn(title, content, imgUrlList.toString());
+//            onFragmentChange(memoContentFragment);
+
+            class InsertRunnable implements Runnable{
+                @Override
+                public void run(){
+                    context = getApplicationContext();
+                    MemoEntity memoEntity = new MemoEntity(title, content, imgUrlList.toString());
+                    MemoDatabase.getInstance(context).memoDao().insertMemo(memoEntity);
+                }
+            }
+
+            InsertRunnable insertRunnable = new InsertRunnable();
+            Thread addThread = new Thread(insertRunnable);
+            addThread.start();
             onFragmentChange(memoContentFragment);
         }
     }
