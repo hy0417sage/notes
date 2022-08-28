@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ShowAllMemoActivity"
+            android:name=".GetMemoActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="RedundantLabel"
@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".FunctionActivity" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".SetMemoActivity" android:theme="@style/AppTheme.NoActionBar"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

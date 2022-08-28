@@ -2,49 +2,40 @@ package com.hy0417sage.notes.model;
 
 import android.net.Uri;
 
+import com.hy0417sage.notes.funtion.Memo;
+
 public class MemoModel {
 
-    public long tempIndex;
-    public String title;
-    public String content;
-    public String stringUrlList;
-    public Uri pictureUrl;
-    public String activityDiscrimination;
+    public static final MemoModel INSTANCE = new MemoModel();
+    public static MemoModel getInstance(){
+        return INSTANCE;
+    }
 
-    public MemoModel(Long tempIndex, String title, String content, String stringUrlList) {
-        this.tempIndex = tempIndex;
+    private long id;
+    private String title;
+    private String text;
+
+    private MemoModel(){
+
+    }
+
+    public void setMemoModel(long id, String title, String text) {
+        this.id = id;
         this.title = title;
-        this.content = content;
-        this.stringUrlList = stringUrlList;
+        this.text = text;
     }
 
-    public MemoModel(Uri pictureUrl, String activityDiscrimination) {
-        this.pictureUrl = pictureUrl;
-        this.activityDiscrimination = activityDiscrimination;
-    }
-
-    public Long getTempIndex() {
-        return tempIndex;
+    public Long getID() {
+        return id;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getContent() {
-        return content;
+    public String getText() {
+        return text;
     }
 
-    public String getStringUrlList() {
-        return stringUrlList;
-    }
-
-    public Uri getPictureUrl() {
-        return pictureUrl;
-    }
-
-    public String getActivityDiscrimination() {
-        return activityDiscrimination;
-    }
 
 }

@@ -1,6 +1,7 @@
 package com.hy0417sage.notes.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,11 +24,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hy0417sage.notes.FunctionActivity;
+import com.hy0417sage.notes.SetMemoActivity;
 import com.hy0417sage.notes.adapter.ImageAdapter;
+import com.hy0417sage.notes.funtion.Camera;
+import com.hy0417sage.notes.funtion.Gallery;
+import com.hy0417sage.notes.funtion.ImageLink;
+import com.hy0417sage.notes.funtion.Memo;
 import com.hy0417sage.notes.model.MemoModel;
 import com.hy0417sage.notes.R;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -36,9 +42,14 @@ import java.util.Objects;
  * 기능3. 메모 편집 및 작성
  * **/
 
-public class MemoCreateOrModifyFragment extends Fragment implements View.OnClickListener {
+public class MemoEditFragment extends Fragment implements View.OnClickListener {
 
-    public FunctionActivity functionStorageActivity;
+    private final Memo memo = Memo.getInstance();
+    private final Camera camera = new Camera();
+    private final Gallery gallery = new Gallery();
+    private final ImageLink imageLink = new ImageLink();
+
+    public SetMemoActivity functionStorageActivity;
     public EditText editTitle, editContent;
     public LinearLayoutManager horizontalLayoutManager;
     public RecyclerView recyclerView;
@@ -56,12 +67,12 @@ public class MemoCreateOrModifyFragment extends Fragment implements View.OnClick
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        fragmentCreateAndEdit = (LinearLayout) inflater.inflate(R.layout.memo_createmodify_view, container, false);
+        fragmentCreateAndEdit = (LinearLayout) inflater.inflate(R.layout.memo_edit_view, container, false);
         setHasOptionsMenu(true);
         Toolbar toolbar = fragmentCreateAndEdit.findViewById(R.id.toolbar);
         ((AppCompatActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(toolbar);
 
-        functionStorageActivity = (FunctionActivity) getActivity();
+        functionStorageActivity = (SetMemoActivity) getActivity();
 
         //1. 제목 입력란과 본문 입력란, 이미지 첨부란이 구분되어 있습니다.
         editTitle = (EditText) fragmentCreateAndEdit.findViewById(R.id.edit_title);
@@ -88,26 +99,26 @@ public class MemoCreateOrModifyFragment extends Fragment implements View.OnClick
         Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
         /* 2. 메모에 이미지를 실시간으로 첨부합니다. (생명주기 onResume 사용)
          * 실시간으로 첨부되고 있는 이미지를 ImageAdapter로 볼 수 있습니다. */
-        memoList.clear();
-        for (int i = 0; i < functionStorageActivity.imgUrlList.size(); i++) {
-            MemoModel memoData = new MemoModel(functionStorageActivity.imgUrlList.get(i), "CreateAndEdit");
-            memoList.add(memoData);
-        }
-        adapter = new ImageAdapter(getActivity().getApplicationContext(), memoList);
-
-        // 3. 이미지를 삭제할 수 있습니다.
-        ((ImageAdapter) adapter).setOnItemClickListener(new ImageAdapter.OnItemClickListener() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onItemClick(View v, int position) {
-                functionStorageActivity.imgUrlList.remove(memoList.get(position).getPictureUrl());
-                memoList.remove(memoList.get(position));
-                adapter.notifyDataSetChanged(); //이미지가 삭제되는것을 실시간으로 보여줍니다.
-                Toast.makeText(fragmentCreateAndEdit.getContext(), "이미지가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
-            }
-        });
-        recyclerView.setAdapter(adapter);
-        recyclerView.scrollToPosition(adapter.getItemCount() - 1); //첨부된 사진을 바로 볼수 있도록 스크롤포지션을 마지막으로 설정하였습니다.
+//        memoList.clear();
+//        for (int i = 0; i < functionStorageActivity.imgUrlList.size(); i++) {
+//            MemoModel memoData = new MemoModel(functionStorageActivity.imgUrlList.get(i), "CreateAndEdit");
+//            memoList.add(memoData);
+//        }
+//        adapter = new ImageAdapter(getActivity().getApplicationContext(), memoList);
+//
+//        // 3. 이미지를 삭제할 수 있습니다.
+//        ((ImageAdapter) adapter).setOnItemClickListener(new ImageAdapter.OnItemClickListener() {
+//            @SuppressLint("NotifyDataSetChanged")
+//            @Override
+//            public void onItemClick(View v, int position) {
+//                functionStorageActivity.imgUrlList.remove(memoList.get(position).getPictureUrl());
+//                memoList.remove(memoList.get(position));
+//                adapter.notifyDataSetChanged(); //이미지가 삭제되는것을 실시간으로 보여줍니다.
+//                Toast.makeText(fragmentCreateAndEdit.getContext(), "이미지가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        recyclerView.setAdapter(adapter);
+//        recyclerView.scrollToPosition(adapter.getItemCount() - 1); //첨부된 사진을 바로 볼수 있도록 스크롤포지션을 마지막으로 설정하였습니다.
 
     }
 
@@ -119,36 +130,29 @@ public class MemoCreateOrModifyFragment extends Fragment implements View.OnClick
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save_button) {
-            if (functionStorageActivity.nowIndex == 0) {
-                functionStorageActivity.saveTheMemo();
-            } else {
-                functionStorageActivity.editMemo();
-            }
+            memo.saveMemo(0, editTitle.getText().toString(), editContent.getText().toString());
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onClick(View v) {
-        /*2. 이미지 첨부란의 추가 버튼을 통해 이미지 첨부가 가능합니다.
-         * 총 방법은 3 가지이며 선택 다이얼로그를 사용하여 첨부 방법을 선택할 수 있도록 하였습니다. */
         if (v.getId() == R.id.add_img_button) {
-            final CharSequence[] items = {getResources().getString(R.string.camera),
-                    getResources().getString(R.string.gallery),
-                    getResources().getString(R.string.link)};
-
+            final CharSequence[] items = {getResources().getString(R.string.camera), getResources().getString(R.string.gallery), getResources().getString(R.string.link)};
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(fragmentCreateAndEdit.getContext());
             alertDialogBuilder.setTitle(getResources().getString(R.string.add_pic));
-
             alertDialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    if (id == 0) {
-                        functionStorageActivity.toRunCamera();
-                    } else if (id == 1) {
-                        functionStorageActivity.showPhotoAlbum();
-
-                    } else if (id == 2) {
-                        functionStorageActivity.inputImgLinkDialog();
+                    switch (id) {
+                        case 1:
+                            camera.takePicture();
+                            break;
+                        case 2:
+                            gallery.getPhotoAlbum();
+                            break;
+                        case 3:
+//                            imageLink.inputLinkDialog();
+//                            imageLink.addImageLink();
                     }
                     dialog.dismiss();
                 }

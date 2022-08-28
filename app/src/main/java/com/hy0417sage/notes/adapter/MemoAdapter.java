@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.hy0417sage.notes.model.MemoModel;
-import com.hy0417sage.notes.FunctionActivity;
+import com.hy0417sage.notes.SetMemoActivity;
 import com.hy0417sage.notes.R;
 
 import java.util.Arrays;
@@ -47,12 +47,12 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         MemoModel memoData = memoDataList.get(position);
 
-        holder.tempIndex = memoData.getTempIndex();
+        holder.tempIndex = memoData.getID();
         holder.title.setText(memoData.getTitle()); //메모 제목
-        holder.content.setText(memoData.getContent()); //메모 글
-        holder.stringUrl = memoData.getStringUrlList().replace("[", "").replace("]", "");
-        List<String> pictureUrlList = Arrays.asList(holder.stringUrl.split(","));
-        Glide.with(context).load(pictureUrlList.get(0)).override(300, 300).into(holder.imageView); //첫번째 이미지를 썸네일로 보여줍니다.
+        holder.content.setText(memoData.getText()); //메모 글
+//        holder.stringUrl = memoData.getStringUrlList().replace("[", "").replace("]", "");
+//        List<String> pictureUrlList = Arrays.asList(holder.stringUrl.split(","));
+//        Glide.with(context).load(pictureUrlList.get(0)).override(300, 300).into(holder.imageView); //첫번째 이미지를 썸네일로 보여줍니다.
     }
 
     @Override
@@ -73,18 +73,18 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ViewHolder> {
 
             title = (TextView) itemView.findViewById(R.id.title);
             content = (TextView) itemView.findViewById(R.id.content);
-            imageView = (ImageView) itemView.findViewById(R.id.imageView);
+//            imageView = (ImageView) itemView.findViewById(R.id.imageView);
 
             //3. 리스트의 메모를 선택하면 메모 상세보기 화면으로 이동합니다.
             // 메모 상세보기 화면에서 해당 메모의 내용을 보여주기 위해서 Intent를 사용하여 값을 전달해 줍니다.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context.getApplicationContext(), FunctionActivity.class);
+                    Intent intent = new Intent(context.getApplicationContext(), SetMemoActivity.class);
                     intent.putExtra("nowIndex", tempIndex);
                     intent.putExtra("title", title.getText());
                     intent.putExtra("content", content.getText());
-                    intent.putExtra("stringUrl", stringUrl);
+//                    intent.putExtra("stringUrl", stringUrl);
                     context.startActivity(intent.addFlags(FLAG_ACTIVITY_NEW_TASK));
                 }
             });

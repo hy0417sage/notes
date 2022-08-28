@@ -49,12 +49,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         MemoModel memoData = memoDataList.get(position);
-        Glide.with(context).load(memoData.getPictureUrl()).override(300, 300).into(holder.imageView);
+//        Glide.with(context).load(memoData.getPictureUrl()).override(300, 300).into(holder.imageView);
 
         //메모 편집 및 작성 화면인 경우 cancel 아이콘은 표시해줍니다.
-        if (memoData.getActivityDiscrimination().equals("CreateAndEdit")) {
-            Glide.with(context).load(R.drawable.cancel).into(holder.deleteImgIcon);
-        }
+//        if (memoData.getActivityDiscrimination().equals("CreateAndEdit")) {
+//            Glide.with(context).load(R.drawable.cancel).into(holder.deleteImgIcon);
+//        }
     }
 
     @Override

@@ -51,19 +51,19 @@ public class DBHelper {
         database.close();
     }
 
-    public void insertColumn(String title, String content, String pictureUrl) {
+    public void insertColumn(String title, String text) {
         ContentValues values = new ContentValues();
         values.put(DataBases.CreateDB.Title, title);
-        values.put(DataBases.CreateDB.Content, content);
-        values.put(DataBases.CreateDB.PictureUrl, pictureUrl);
+        values.put(DataBases.CreateDB.Text, text);
+//        values.put(DataBases.CreateDB.PictureUrl, pictureUrl);
         database.insert(DataBases.CreateDB.TABLE_NAME, null, values);
     }
 
-    public void updateColumn(long id, String title, String content, String pictureUrl) {
+    public void updateColumn(long id, String title, String text) {
         ContentValues values = new ContentValues();
         values.put(DataBases.CreateDB.Title, title);
-        values.put(DataBases.CreateDB.Content, content);
-        values.put(DataBases.CreateDB.PictureUrl, pictureUrl);
+        values.put(DataBases.CreateDB.Text, text);
+//        values.put(DataBases.CreateDB.PictureUrl, pictureUrl);
         database.update(DataBases.CreateDB.TABLE_NAME, values, "_id=" + id, null);
     }
 
@@ -71,7 +71,7 @@ public class DBHelper {
         database.delete(DataBases.CreateDB.TABLE_NAME, "_id=" + id, null);
     }
 
-    public Cursor selectColumns() {
+    public Cursor selectColumns(long id) {
         return database.query(DataBases.CreateDB.TABLE_NAME, null, null, null, null, null, null);
     }
 
