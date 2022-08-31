@@ -1,4 +1,4 @@
-package com.hy0417sage.notes.fragment;
+package com.hy0417sage.notes.view;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -32,7 +32,7 @@ import java.util.Objects;
  * 기능2. 메모 상세보기
  * **/
 
-public class MemoContentFragment extends Fragment {
+public class MemoDetailsView extends Fragment {
 
     public FunctionActivity functionActivity;
     public TextView textTitle;

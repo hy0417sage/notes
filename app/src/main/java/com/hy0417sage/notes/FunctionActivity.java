@@ -23,8 +23,8 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.hy0417sage.notes.database.DBHelper;
-import com.hy0417sage.notes.fragment.MemoContentFragment;
-import com.hy0417sage.notes.fragment.MemoCreateOrModifyFragment;
+import com.hy0417sage.notes.view.MemoDetailsView;
+import com.hy0417sage.notes.view.MemoEditView;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,8 +44,8 @@ import java.util.List;
 public class FunctionActivity extends AppCompatActivity {
 
     public DBHelper databaseHelper;
-    public MemoCreateOrModifyFragment memoCreateOrModifyFragment = new MemoCreateOrModifyFragment();
-    public MemoContentFragment memoContentFragment = new MemoContentFragment();
+    public MemoEditView memoCreateOrModifyFragment = new MemoEditView();
+    public MemoDetailsView memoContentFragment = new MemoDetailsView();
     public String title, content, stringUrl, linkData;
     public List<Uri> imgUrlList = new ArrayList<Uri>();
     public long nowIndex;
@@ -276,7 +276,7 @@ public class FunctionActivity extends AppCompatActivity {
         int permission = ContextCompat.checkSelfPermission(FunctionActivity.this, Manifest.permission.CAMERA);
         if (permission == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 0);
-        }else if(permission == PackageManager.PERMISSION_GRANTED){
+        }else{
             dispatchTakePictureIntent();
         }
     }

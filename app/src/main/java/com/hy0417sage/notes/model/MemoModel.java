@@ -1,26 +1,55 @@
 package com.hy0417sage.notes.model;
 
-import android.net.Uri;
+import androidx.fragment.app.Fragment;
 
 public class MemoModel {
 
-    public long tempIndex;
-    public String title;
-    public String content;
-    public String stringUrlList;
-    public Uri pictureUrl;
-    public String activityDiscrimination;
+//    public static MemoModel getInstance() {
+//        return ;
+//    }
 
-    public MemoModel(Long tempIndex, String title, String content, String stringUrlList) {
+    private long newIndex;
+    private long tempIndex;
+    private String title;
+    private String content;
+//    private final String stringUrlList;
+    private Fragment fragment;
+
+    public MemoModel(){
+
+    }
+
+    public MemoModel(String title, String content) {
+        this.title = title;
+        this.content = content;
+//        this.stringUrlList = stringUrlList;
+    }
+
+    public MemoModel(long tempIndex, String title, String content) {
         this.tempIndex = tempIndex;
         this.title = title;
         this.content = content;
-        this.stringUrlList = stringUrlList;
+//        this.stringUrlList = stringUrlList;
     }
 
-    public MemoModel(Uri pictureUrl, String activityDiscrimination) {
-        this.pictureUrl = pictureUrl;
-        this.activityDiscrimination = activityDiscrimination;
+    public void setNewIndex(long newIndex) {
+        this.newIndex = newIndex;
+    }
+
+    public long getNewIndex() {
+        return newIndex;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setFragment(Fragment fragment) {
+        this.fragment = fragment;
     }
 
     public Long getTempIndex() {
@@ -35,16 +64,12 @@ public class MemoModel {
         return content;
     }
 
-    public String getStringUrlList() {
-        return stringUrlList;
+    public Fragment getFragment() {
+        return fragment;
     }
 
-    public Uri getPictureUrl() {
-        return pictureUrl;
-    }
-
-    public String getActivityDiscrimination() {
-        return activityDiscrimination;
-    }
+//    public String getStringUrlList() {
+//        return stringUrlList;
+//    }
 
 }
